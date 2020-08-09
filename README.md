@@ -5,6 +5,7 @@ Members :
 
 Note:
 - First letter of Employee ID determine what position it is. E.g: Mxxxxx = manager, Sxxxxx = Staff
+
 Feature :
 - Accept order from customer
 - display receipt
