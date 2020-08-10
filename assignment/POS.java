@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package assignment;
+import java.util.ArrayList;
 
 /**
  *
@@ -11,6 +12,15 @@ package assignment;
  */
 public class POS {
     public static void main(String[] args) {
+        Employee.addEmployee("Ben", "M02482", "76541", 2002, 18);
+        Employee.addEmployee("Alex", "S02482", "HeckYea", 2011, 21);
+        
+        
+        for (Employee e: Employee.getEmpList()) { //Print empList
+            System.out.println(e);
+        }
+    }
+    public static void login() {
         
     }
 }
