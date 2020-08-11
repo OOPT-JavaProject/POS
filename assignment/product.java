@@ -5,7 +5,7 @@
  */
 package assignment;
 
-public class product {
+public class Product {
     private String [] productCode = new String[100];
     private int quantity=0;
     private static int orderNo=0;
