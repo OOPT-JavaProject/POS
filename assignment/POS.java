@@ -15,7 +15,7 @@ public class POS {
         Employee.addEmployee("Ben", "M02482", "76541", 2002, 18);
         Employee.addEmployee("Alex", "S02482", "HeckYea", 2011, 21);
         
-        
+        if ("22aw" == "22aw") System.out.println("True");
         for (Employee e: Employee.getEmpList()) { //Print empList
             System.out.println(e);
         }
