@@ -1,30 +1,12 @@
-
 package assignment;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.lang.*;
 /**
  *
- * @author Kai Yuet
+ * @author Kai Ben
  */
 public class POS {
     
-    public static void main(String[] args) {
-        char staffOrManager;
-        Employee.addEmployee("Ben", "M02482", "76541", 2002, 18);
-        Employee.addEmployee("Alex", "S02482", "HeckYea", 2011, 21);
-        
-        
-        for (Employee e: Employee.getEmpList()) { //Print empList
-            System.out.println(e);
-        }
-        staffOrManager=login();
-        if(staffOrManager=='M')
-            System.out.println("Login successfully, you are a manager.");
-        else
-            System.out.println("Login successfully, you are a staff.");
-        
-    }
     public static char login() {
         String loginID;
         String loginPass;
@@ -54,5 +36,28 @@ public class POS {
         }while(Character.toUpperCase(cont)!='N');
         return cont;
     }
+    
+    
+    
+    
+    public static void main(String[] args) {
+        char staffOrManager;
+        Employee.addEmployee("Ben", "M02482", "76541", 2002, 18);
+        Employee.addEmployee("Alex", "S02482", "HeckYea", 2011, 21);
+        
+        
+        for (Employee e: Employee.getEmpList()) { //Print empList
+            System.out.println(e);
+        }
+        staffOrManager=login();
+        if(staffOrManager=='M') {
+            System.out.println("Login successfully, you are a manager.");
+            Menu menu = new Menu(staffOrManager);
+        }
+        else {
+            System.out.println("Login successfully, you are a staff.");
+            Menu menu = new Menu(staffOrManager);
+        }
+        
+    }
 }
-
