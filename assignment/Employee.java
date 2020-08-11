@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Z
  */
-
+public class Employee {
     //Fields for Employee
     private String empName;
     private String empID;
