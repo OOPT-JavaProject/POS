@@ -35,13 +35,13 @@ public class POS {
     }
     
     public static void changeUser() {
-        char staffOrManager;
         System.out.println("Are you sure you want to logout? (y = yes)");
         if (scan.next().charAt(0) == 'y' || scan.next().charAt(0) == 'Y') {
             System.out.println("Succesfully Logged Out.");
             scan.nextLine();
             displayMenu(login());
         }
+        else System.out.println("Log Out Cancelled.");
     }
     
     public static void exit() {
@@ -53,6 +53,7 @@ public class POS {
         if(employee.getEmpID().charAt(0) == 'M') {
             System.out.println("Login successfully, you are a manager.");
             Manager manager = new Manager(employee);
+            manager.dMenu();
         }
         else if (employee.getEmpID().charAt(0) == 'S') {
             System.out.println("Login successfully, you are a staff.");
@@ -64,12 +65,13 @@ public class POS {
         System.out.flush();  
     }  
     public static void main(String[] args) {
-        Employee.addEmployee("Ben", "M02482", "76541", 2002, 18);
+        Employee.addEmployee("Ben Nie", "M02482", "76541", 2002, 18);
         Employee.addEmployee("Alex", "S02482", "HeckYea", 2011, 21);
         
         for (Employee e: Employee.getEmpList()) { //Print empList
             System.out.println(e);
         }
+        Employee.displayAllEmp();
         displayMenu(login());
     }
 }

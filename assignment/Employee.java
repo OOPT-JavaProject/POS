@@ -101,10 +101,212 @@ public class Employee {
         return null;
     }
     
+    public static void addEmployee() { //Add Employee(Data come from Input from user)
+        String empName;
+        String empID;
+        String empPassword;
+        int yearJoined;
+        int age;
+        
+        System.out.println("Adding new employee:\n(Enter all the information)");
+        System.out.print("Name : ");
+        empName = POS.scan.nextLine();
+        System.out.print("ID : ");
+        empID = POS.scan.nextLine();
+        System.out.print("New Password : ");
+        empPassword = POS.scan.nextLine();
+        System.out.print("Year Joined: ");
+        yearJoined = POS.scan.nextInt();
+        System.out.print("Age : ");
+        age = POS.scan.nextInt();
+        POS.scan.nextLine();
+        
+        Employee newEmp = new Employee(empName, empID, empPassword, yearJoined, age);
+        empList.add(newEmp);
+        System.out.println("Successfully Added " + newEmp.empName + " as " + newEmp.empPos);
+    }
+    
+    //Add Employee(Data come from passed-in parameter)
     public static void addEmployee(String empName, String empID, String empPassword, int yearJoined, int age) {
         Employee newEmp = new Employee(empName, empID, empPassword, yearJoined, age);
         empList.add(newEmp);
         System.out.println("Successfully Added " + newEmp.empName + " as " + newEmp.empPos);
+    }
+    
+    public static void removeEmployee() { //Remove Employee(Prompt user which user to remove)
+        int i;
+        System.out.println("Current Employee:");
+        displayAllEmp();
+        System.out.print("\nPlease enter the No. to remove => ");
+        i = POS.scan.nextInt();
+        System.out.print("Are you sure? (Y to proceed or press other key to cancel) \n=>");
+        if (Character.toUpperCase(POS.scan.next().charAt(0)) != 'Y')
+            return;
+        else {
+            System.out.printf("Successfuly removed %s(%s).", empList.get(i-1).getEmpName(), empList.get(i-1).empID);
+            empList.remove(i-1);
+        }
+    }
+    
+    public static void removeEmployee(int i) { //Remove Employee(Remove the user with the passed-in INDEX i in the empList)
+        System.out.print("Are you sure? (Y to proceed or press other key to cancel) \n=>");
+        if (Character.toUpperCase(POS.scan.next().charAt(0)) != 'Y')
+            return;
+        else {
+            System.out.printf("Successfuly removed %s(%s).", empList.get(i).getEmpName(), empList.get(i).empID);
+            empList.remove(i);
+        }
+    }
+    
+    public static void modifyEmployee() { //Modify Employee(Prompt user to choose who and what field to modify)
+        int i;
+        System.out.println("\nCurrent Employee:");
+        displayAllEmp();
+        System.out.print("\nPlease enter the No. to modify => "); //Let user choose who to modify
+        i = POS.scan.nextInt();
+        int sel = 0;
+        Employee selectedEmp = Employee.getEmpList().get(i-1); //Store the selected employee object
+        do {
+            if (sel != -1) {
+                System.out.println("Selected Employee:\n" + Employee.getEmpList().get(i-1)); //Print the selected employee's toString()
+                Menu.displayManagerModifyUserMenu();
+            }
+            sel = Menu.getInput();
+            String oldS;
+            int oldI;
+            switch (sel) {
+                case 1: // modify name
+                    oldS = selectedEmp.getEmpName();
+                    System.out.print("Enter new name : ");
+                    POS.scan.nextLine();
+                    selectedEmp.setEmpName(POS.scan.nextLine());
+                    System.out.printf("Successfully Modified Name (%s => %s)\n", oldS, selectedEmp.getEmpName());
+                    break;
+                case 2: // modify EmpID
+                    oldS = selectedEmp.getEmpID();
+                    System.out.print("Enter new employee ID : ");
+                    selectedEmp.setEmpID(POS.scan.nextLine());
+                    System.out.printf("Successfully Modified Employee ID (%s => %s)\n", oldS, selectedEmp.getEmpID());
+                    break; 
+                case 3: // modify Year Joined
+                    oldI = selectedEmp.getYearJoined();
+                    System.out.print("Enter new Year Joined : ");
+                    selectedEmp.setYearJoined(POS.scan.nextInt());
+                    System.out.printf("Successfully Modified Year Joined (%d => %d)\n", oldI, selectedEmp.getYearJoined());
+                    break;
+                case 4: // modify age
+                    oldI = selectedEmp.getAge();
+                    System.out.print("Enter new Age : ");
+                    selectedEmp.setAge(POS.scan.nextInt());
+                    System.out.printf("Successfully Modified Age (%d => %d)\n", oldI, selectedEmp.getAge());
+                    break;
+                case 5: Employee.removeEmployee(i-1); return; // delete user
+                case 0: return; //return to main menu
+                default: System.out.println("Invalid input."); sel = -1;
+            }
+        } while(sel != 0);
+    }
+    
+    public static void searchEmployee() { //Search Employee(Let user search by any of the fields)
+        int sel = 0;
+        do {
+            if (sel != -1) Menu.displaySearchByMenu();
+            sel = Menu.getInput();
+            String inputS;
+            int inputI;
+            ArrayList<Integer> foundIndexList = new ArrayList<>();
+            switch (sel) {
+                case 1: //Search by Name
+                    foundIndexList.clear(); //reset the found array because we dont want previous search result
+                    System.out.print("Enter name to search: ");
+                    inputS = POS.scan.nextLine();
+                    for (Employee e: empList) { //loop thru the employee List to see any matches, if matched, add the index into foundIndexList
+                        if (e.empName.equals(inputS)) {
+                            foundIndexList.add(empList.indexOf(e));
+                        }
+                    }
+                    displayAllEmp(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
+                    System.out.printf("%d results found.", foundIndexList.size());
+                    break;
+                case 2: //Search by EmpID
+                    System.out.print("Enter Employee ID to search: ");
+                    inputS = POS.scan.nextLine();
+                    for (Employee e: empList) { 
+                        if (e.empID.equals(inputS)) {
+                            foundIndexList.add(empList.indexOf(e));
+                        }
+                    }
+                    displayAllEmp(foundIndexList);
+                    System.out.printf("%d results found.", foundIndexList.size());
+                    break; 
+                case 3: //Search by Position
+                    foundIndexList.clear(); 
+                    System.out.print("Enter Position to search: ");
+                    inputS = POS.scan.nextLine();
+                    for (Employee e: empList) { 
+                        if (e.empPos.equals(inputS)) {
+                            foundIndexList.add(empList.indexOf(e));
+                        }
+                    }
+                    displayAllEmp(foundIndexList);
+                    System.out.printf("%d results found.", foundIndexList.size());
+                    break;
+                case 4: //Search by Year Joined
+                    foundIndexList.clear(); 
+                    System.out.print("Enter Year Joined to search: ");
+                    inputI = POS.scan.nextInt();
+                    for (Employee e: empList) { 
+                        if (e.yearJoined == inputI) {
+                            foundIndexList.add(empList.indexOf(e));
+                        }
+                    }
+                    displayAllEmp(foundIndexList);
+                    System.out.printf("%d results found.", foundIndexList.size());
+                    break; 
+                case 5: //Search by Age
+                    foundIndexList.clear(); 
+                    System.out.print("Enter Age to search: ");
+                    inputI = POS.scan.nextInt();
+                    for (Employee e: empList) { 
+                        if (e.age == inputI) {
+                            foundIndexList.add(empList.indexOf(e));
+                        }
+                    }
+                    displayAllEmp(foundIndexList);
+                    System.out.printf("%d results found.", foundIndexList.size());
+                    break; 
+                case 6: //Search by password
+                    foundIndexList.clear(); 
+                    System.out.print("Enter Password to search: ");
+                    inputS = POS.scan.nextLine();
+                    for (Employee e: empList) { 
+                        if (e.empPassword.equals(inputS)) {
+                            foundIndexList.add(empList.indexOf(e));
+                        }
+                    }
+                    displayAllEmp(foundIndexList);
+                    System.out.printf("%d results found.", foundIndexList.size());
+                    break;
+                case 0: return; //return to main menu
+                default: System.out.println("Invalid input."); sel = -1;
+            }
+        } while(sel != 0);
+    }
+    
+    public static void displayAllEmp() { //Display All employee in the Employee List
+        System.out.println("____________________________________________________________");
+        System.out.printf("%4s|\t%10s|\t%6s|\t%9s|%12s|\t%4s\n", "[No]", "Name", "ID", "Position", "Year Joined", "Age");
+        System.out.println("------------------------------------------------------------");
+        for (Employee e:empList)
+            System.out.printf("[%2d]\t%10s\t%6s\t%9s%13s\t%4s\n", empList.indexOf(e) + 1, e.empName, e.empID, e.empPos, e.yearJoined, e.age);
+    }
+    
+    public static void displayAllEmp(ArrayList<Integer> indexList) { //Display All employee based on the selected index in the Employee List
+        System.out.println("____________________________________________________________");
+        System.out.printf("%4s|\t%10s|\t%6s|\t%9s|%12s|\t%4s\n", "[No]", "Name", "ID", "Position", "Year Joined", "Age");
+        System.out.println("------------------------------------------------------------");
+        for (Integer i: indexList)
+            System.out.printf("[%2d]\t%10s\t%6s\t%9s%13s\t%4s\n", indexList.indexOf(i) + 1, empList.get(i).empName, empList.get(i).empID, empList.get(i).empPos, empList.get(i).yearJoined, empList.get(i).age);
     }
     
     @Override
