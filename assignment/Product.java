@@ -34,6 +34,16 @@ public class Product {
         
     }
 
+    public static void init() {
+        Product.addProduct("Sofas","S1001",350,600,"100*50*100","Mr. Lee",50);
+        Product.addProduct("Table","T1001",150,700,"100*100*100","Mr. Cheah",50);
+        Product.addProduct("Beds","B1001",150,800,"100*50*100","Mrs. Teh",50);
+        Product.addProduct("Ottoman","O1001",150,600,"10*10*10","Mr. Kee",50);
+        Product.addProduct("Dressers","D1001",150,800,"10*10*10","Mr. Tan",50);
+        Product.addProduct("Futons","F1001",150,700,"10*10*10","Mr. Soh",50);
+        Product.addProduct("Lockers","L1001",150,1000,"10*10*10","Mr. Thiow",50);
+    }
+    
     public String getProductName() {
         return productName;
     }
@@ -90,11 +100,6 @@ public class Product {
         this.stock = stock;
     }
     
-    @Override
-    public String toString() {
-        return "-----------------------"+ "\nProduct Name :" + productName + "\nProduct Code :" + productCode + 
-                "\nCosts :" + costs + "\nPrice :" + price + "\nSize :" + size + "\nSupplier :" + supplier + "\nStock :" + stock +"\n";
-    }
     public static void addProduct(){
        Scanner src=new Scanner(System.in);
        System.out.print("Enter the product name :");
@@ -123,13 +128,16 @@ public class Product {
         return productList;
     }
     
-    public static void displayProduct(){
+    public static void displayProduct() {
+        System.out.print("\nProduct List\n");
         for(Product p:productList)
         System.out.print(p);
     }
     
-    
-    
+    @Override
+    public String toString() {
+        return "-----------------------"+ "\nProduct Name :" + productName + "\nProduct Code :" + productCode + 
+                "\nCosts :" + costs + "\nPrice :" + price + "\nSize :" + size + "\nSupplier :" + supplier + "\nStock :" + stock +"\n";
+    }
 }
-
 
