@@ -7,10 +7,10 @@ import java.util.Scanner;
  */
 public class POS {
     static Scanner scan = new Scanner(System.in);
+    static char cont;
     public static Employee login() {
         String loginID;
         String loginPass;
-        char cont;
         ArrayList<Employee> existingEmpList=Employee.getEmpList();
         
         System.out.println("Welcome, please start by entering your ID and password.");
@@ -19,24 +19,30 @@ public class POS {
             loginID=scan.nextLine();
             for(int i=0;i<existingEmpList.size();i++){
                 if(loginID.equals(existingEmpList.get(i).getEmpID())){
-                    System.out.print("Staff password: ");
-                    loginPass=scan.nextLine();
-                    if(loginPass.equals(existingEmpList.get(i).getEmpPassword())){
-                        clearScreen();
-                        return existingEmpList.get(i);
-                    }
+                    do {
+                        System.out.print("Staff password: ");
+                        loginPass=scan.nextLine();
+                        if(loginPass.equals(existingEmpList.get(i).getEmpPassword())){
+                            clearScreen();
+                            return existingEmpList.get(i);
+                        }
+                        System.out.print("Password entered is wrong.\nRetry?(y=yes) : ");
+                        cont=scan.next().charAt(0);
+                        scan.nextLine();
+                    } while(Character.toUpperCase(cont) == 'Y');
+                    break;
                 }                         
             }
-            System.out.print("ID entered doesn't exist.\nContinue to enter another ID?: ");
+            System.out.print("ID doesn't exist.\nContinue to enter another ID?(y=yes): ");
             cont=scan.next().charAt(0);
             scan.nextLine();
-        }while(Character.toUpperCase(cont)!='N');
+        }while(Character.toUpperCase(cont)=='Y');
         return null;
     }
     
     public static void changeUser() {
         System.out.println("Are you sure you want to logout? (y = yes)");
-        if (scan.next().charAt(0) == 'y' || scan.next().charAt(0) == 'Y') {
+        if (Character.toUpperCase(scan.next().charAt(0)) == 'Y') {
             System.out.println("Succesfully Logged Out.");
             scan.nextLine();
             displayMenu(login());
@@ -50,7 +56,8 @@ public class POS {
     }
     
     public static void displayMenu(Employee employee) {
-        if(employee.getEmpID().charAt(0) == 'M') {
+        if (employee == null) exit();
+        else if(employee.getEmpID().charAt(0) == 'M') {
             System.out.println("Login successfully, you are a manager.");
             Manager manager = new Manager(employee);
             manager.dMenu();
@@ -65,13 +72,12 @@ public class POS {
         System.out.flush();  
     }  
     public static void main(String[] args) {
-        Employee.addEmployee("Ben Nie", "M02482", "76541", 2002, 18);
-        Employee.addEmployee("Alex", "S02482", "HeckYea", 2011, 21);
-        
-        for (Employee e: Employee.getEmpList()) { //Print empList
+        Employee.init();
+        Product.init();
+        for (Employee e: Employee.getEmpList()) { //Print empList (DEBUG PURPOSE)
             System.out.println(e);
         }
-        Employee.displayAllEmp();
-        displayMenu(login());
+        //Employee.displayAllEmp();
+        displayMenu(login()); //Login before display the user MENU
     }
 }

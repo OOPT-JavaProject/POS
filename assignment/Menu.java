@@ -49,9 +49,10 @@ public final class Menu {
     public static void displayManagerProductMenu() {
         System.out.println("\nManage Product:");
         System.out.println("1 => Display All Products");
-        System.out.println("2 => Modify Product");
-        System.out.println("3 => Remove Product");
-        System.out.println("4 => Search Product");
+        System.out.println("2 => Add Product");
+        System.out.println("3 => Modify Product");
+        System.out.println("4 => Remove Product");
+        System.out.println("5 => Search Product");
         System.out.println("0 => Return to main menu");
     }
     
@@ -106,9 +107,17 @@ public final class Menu {
     }
     
     public static int getInput() {
-        System.out.print("\nPlease select one: ");
-        select = scan.nextInt();
-        scan.nextLine();
-        return select;
+        while(true) {
+            System.out.print("\nPlease select one: ");
+            if (scan.hasNextInt()) {
+                select = scan.nextInt();
+                scan.nextLine();
+                return select;
+            }
+            else {
+                System.out.println("Invalid input.");
+                scan.nextLine();
+            }
+        }
     }
 }
