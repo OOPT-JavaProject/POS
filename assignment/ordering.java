@@ -1,5 +1,6 @@
+package assignment;
 
-public class ordering {
+public class Ordering {
     public static void main(String[] args) {
         char yes=0;
         
