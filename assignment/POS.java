@@ -31,9 +31,10 @@ public class POS {
                         scan.nextLine();
                     } while(Character.toUpperCase(cont) == 'Y');
                     break;
-                }                         
+                }
+                else if (i == existingEmpList.size() - 1) System.out.println("ID doesn't exist.");
             }
-            System.out.print("ID doesn't exist.\nContinue to enter another ID?(y=yes): ");
+            System.out.print("Continue to enter another ID?(y=yes): ");
             cont=scan.next().charAt(0);
             scan.nextLine();
         }while(Character.toUpperCase(cont)=='Y');
@@ -74,6 +75,7 @@ public class POS {
     public static void main(String[] args) {
         Employee.init();
         Product.init();
+        //Order.init();
         for (Employee e: Employee.getEmpList()) { //Print empList (DEBUG PURPOSE)
             System.out.println(e);
         }

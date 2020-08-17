@@ -158,7 +158,7 @@ public class Employee {
     
     public static void removeEmployee(int i) { //Remove Employee(Remove the user with the passed-in INDEX i in the empList)
         System.out.print("Are you sure? (Y to proceed or press other key to cancel) \n=>");
-        if (Character.toUpperCase(POS.scan.next().charAt(0)) != 'Y') {
+        if (Character.toUpperCase(POS.scan.next().charAt(0)) == 'Y') {
             System.out.printf("Successfuly removed %s(%s).", empList.get(i).getEmpName(), empList.get(i).empID);
             empList.remove(i);
         }
@@ -178,7 +178,7 @@ public class Employee {
         Employee selectedEmp = Employee.getEmpList().get(i-1); //Store the selected employee object
         do {
             if (sel != -1) {
-                System.out.println("Selected Employee:\n" + Employee.getEmpList().get(i-1)); //Print the selected employee's toString()
+                System.out.println("Selected Employee:\n" + selectedEmp); //Print the selected employee's toString()
                 Menu.displayManagerModifyUserMenu();
             }
             sel = Menu.getInput();
@@ -219,6 +219,110 @@ public class Employee {
         } while(sel != 0);
     }
     
+    public static void modifyEmployee(ArrayList<Integer> indexList) { //Modify Employee(Prompt user to choose who and what field to modify)
+        int i;
+        //System.out.println("\nCurrent Employee:");
+        //displayAllEmp();
+        //System.out.print("\nPlease enter the No. to modify => "); 
+        //i = POS.scan.nextInt();
+        do {
+            i = Validation.vInt("\nPlease enter the No. to modify => "); //Let user choose who to modify
+            if (i < 1 || i > indexList.size()) System.out.println("Invalid Input.");
+        } while (i < 1 || i > indexList.size());
+        int sel = 0;
+        Employee selectedEmp = Employee.getEmpList().get(indexList.get(i-1)); //Store the selected employee object
+        do {
+            if (sel != -1) {
+                System.out.print("Selected Employee:\n" + selectedEmp); //Print the selected employee's toString()
+                Menu.displayManagerModifyUserMenu();
+            }
+            sel = Menu.getInput();
+            String oldS, newS;
+            int oldI, newI;
+            switch (sel) {
+                case 1: // modify name
+                    oldS = selectedEmp.getEmpName();
+                    System.out.print("Enter new name : ");
+                    POS.scan.nextLine();
+                    selectedEmp.setEmpName(POS.scan.nextLine());
+                    System.out.printf("Successfully Modified Name (%s => %s)\n", oldS, selectedEmp.getEmpName());
+                    break;
+                case 2: // modify EmpID
+                    oldS = selectedEmp.getEmpID();
+                    do {
+                        System.out.print("Enter new employee ID : ");
+                        newS = POS.scan.nextLine();
+                    } while(!Validation.vID(newS));
+                    selectedEmp.setEmpID(newS);
+                    System.out.printf("Successfully Modified Employee ID (%s => %s)\n", oldS, selectedEmp.getEmpID());
+                    selectedEmp.posCheck(selectedEmp.getEmpID());
+                    break; 
+                case 3: // modify Year Joined
+                    oldI = selectedEmp.getYearJoined();
+                    selectedEmp.setYearJoined(Validation.vYearJoined("Enter new Year Joined : ")); //Input yearJoined with validation with custom print message
+                    System.out.printf("Successfully Modified Year Joined (%d => %d)\n", oldI, selectedEmp.getYearJoined());
+                    break;
+                case 4: // modify age
+                    oldI = selectedEmp.getAge();
+                    selectedEmp.setAge(Validation.vAge("Enter new Age : ")); //Input yearJoined with validation with custom print message
+                    System.out.printf("Successfully Modified Age (%d => %d)\n", oldI, selectedEmp.getAge());
+                    break;
+                case 5: Employee.removeEmployee(empList.indexOf(selectedEmp)); return; // delete user
+                case 0: return; //return to main menu
+                default: System.out.println("Invalid input."); sel = -1;
+            }
+        } while(sel != 0);
+    }
+    
+    public static void modifyEmployee(int index) { //Modify Employee(Prompt user what field to modify from the given index of emp)
+        //System.out.println("\nCurrent Employee:\n" + empList.get(index));
+        //System.out.print("\nPlease enter the No. to modify => "); 
+        //i = POS.scan.nextInt();
+        int sel = 0;
+        Employee selectedEmp = Employee.getEmpList().get(index); //Store the selected employee object
+        do {
+            if (sel != -1) {
+                System.out.println("Selected Employee:\n" + selectedEmp); //Print the selected employee's toString()
+                Menu.displayManagerModifyUserMenu();
+            }
+            sel = Menu.getInput();
+            String oldS, newS;
+            int oldI, newI;
+            switch (sel) {
+                case 1: // modify name
+                    oldS = selectedEmp.getEmpName();
+                    System.out.print("Enter new name : ");
+                    POS.scan.nextLine();
+                    selectedEmp.setEmpName(POS.scan.nextLine());
+                    System.out.printf("Successfully Modified Name (%s => %s)\n", oldS, selectedEmp.getEmpName());
+                    break;
+                case 2: // modify EmpID
+                    oldS = selectedEmp.getEmpID();
+                    do {
+                        System.out.print("Enter new employee ID : ");
+                        newS = POS.scan.nextLine();
+                    } while(!Validation.vID(newS));
+                    selectedEmp.setEmpID(newS);
+                    System.out.printf("Successfully Modified Employee ID (%s => %s)\n", oldS, selectedEmp.getEmpID());
+                    selectedEmp.posCheck(selectedEmp.getEmpID());
+                    break; 
+                case 3: // modify Year Joined
+                    oldI = selectedEmp.getYearJoined();
+                    selectedEmp.setYearJoined(Validation.vYearJoined("Enter new Year Joined : ")); //Input yearJoined with validation with custom print message
+                    System.out.printf("Successfully Modified Year Joined (%d => %d)\n", oldI, selectedEmp.getYearJoined());
+                    break;
+                case 4: // modify age
+                    oldI = selectedEmp.getAge();
+                    selectedEmp.setAge(Validation.vAge("Enter new Age : ")); //Input yearJoined with validation with custom print message
+                    System.out.printf("Successfully Modified Age (%d => %d)\n", oldI, selectedEmp.getAge());
+                    break;
+                case 5: Employee.removeEmployee(index); return; // delete user
+                case 0: return; //return to main menu
+                default: System.out.println("Invalid input."); sel = -1;
+            }
+        } while(sel != 0);
+    }
+    
     public static void searchEmployee() { //Search Employee(Let user search by any of the fields)
         int sel = 0;
         do {
@@ -239,6 +343,7 @@ public class Employee {
                     }
                     displayAllEmp(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("%d results found.", foundIndexList.size());
+                    askToModify(foundIndexList);
                     break;
                 case 2: //Search by EmpID
                     do {
@@ -252,6 +357,7 @@ public class Employee {
                     }
                     displayAllEmp(foundIndexList);
                     System.out.printf("%d results found.", foundIndexList.size());
+                    askToModify(foundIndexList);
                     break; 
                 case 3: //Search by Position
                     foundIndexList.clear();
@@ -270,6 +376,7 @@ public class Employee {
                     }
                     displayAllEmp(foundIndexList);
                     System.out.printf("%d results found.", foundIndexList.size());
+                    askToModify(foundIndexList);
                     break;
                 case 4: //Search by Year Joined
                     foundIndexList.clear(); 
@@ -281,6 +388,7 @@ public class Employee {
                     }
                     displayAllEmp(foundIndexList);
                     System.out.printf("%d results found.", foundIndexList.size());
+                    askToModify(foundIndexList);
                     break; 
                 case 5: //Search by Age
                     foundIndexList.clear(); 
@@ -292,6 +400,7 @@ public class Employee {
                     }
                     displayAllEmp(foundIndexList);
                     System.out.printf("%d results found.", foundIndexList.size());
+                    askToModify(foundIndexList);
                     break; 
                 case 6: //Search by password
                     foundIndexList.clear(); 
@@ -306,11 +415,23 @@ public class Employee {
                     }
                     displayAllEmp(foundIndexList);
                     System.out.printf("%d results found.", foundIndexList.size());
+                    askToModify(foundIndexList);
                     break;
                 case 0: return; //return to main menu
                 default: System.out.println("Invalid input."); sel = -1;
             }
         } while(sel != 0);
+    }
+    
+    private static void askToModify(ArrayList<Integer> indexList) {
+        if (indexList.isEmpty()) return;
+        System.out.print("\nDo you want to modify? (y=yes) => ");
+        if (Character.toUpperCase(POS.scan.next().charAt(0)) == 'Y') {
+            if (indexList.size() > 1) {
+                modifyEmployee(indexList);
+            }
+            else modifyEmployee(indexList.get(0));
+        }
     }
     
     public static void displayAllEmp() { //Display All employee in the Employee List

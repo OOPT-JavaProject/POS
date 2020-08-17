@@ -11,7 +11,6 @@ import java.util.Scanner;
  */
 public final class Menu {
     private static int select;
-    private static Scanner scan = new Scanner(System.in);
     
     public Menu() {
     }
@@ -109,14 +108,14 @@ public final class Menu {
     public static int getInput() {
         while(true) {
             System.out.print("\nPlease select one: ");
-            if (scan.hasNextInt()) {
-                select = scan.nextInt();
-                scan.nextLine();
+            if (POS.scan.hasNextInt()) {
+                select = POS.scan.nextInt();
+                POS.scan.nextLine();
                 return select;
             }
             else {
                 System.out.println("Invalid input.");
-                scan.nextLine();
+                POS.scan.nextLine();
             }
         }
     }
