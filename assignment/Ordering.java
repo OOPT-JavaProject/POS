@@ -1,11 +1,12 @@
 package ordring;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ordering {
     public static void main(String[] args) {
         char yes=0;
-        int[] prodNo = new int[10], quantity = new int[10] ;
-        int num = 0;
+        int orderNo = 0, qty;
+        ArrayList<Product> prodOrdered=new ArrayList <Product>();
         Scanner scn = new Scanner(System.in);
         Order order = new Order();
         Product.addProduct("Sofas","S1001",350,600,"100*50*100","Mr. Lee",50);
@@ -18,40 +19,37 @@ public class Ordering {
           int v = 0;
         do{
 
-            int no = 1;
-          for(int i = 0 ; i < prodNo.length;i++){
-           if(prodNo[i] >= 1 )
-               num = i+1;
+          int no = 0;
+            System.out.printf("Staff name : \n");
+            System.out.printf("No. \t Item Code \t Product \t Quantity \t Price      Subtotal \n");
+            System.out.printf("----------------------------------------------------------------------------\n");
+            if(orderNo > 0){
+                for(int i = 0; i < prodOrdered.size();i++ )
+                    System.out.printf("%d \t %s \t %s \t %d \t %.2f \t \t %.2f\n",i+1, prodOrdered.get(i).getProductCode(),prodOrdered.get(i).getProductName(),prodOrdered.get(i).getQtyOrder(),prodOrdered.get(i).getPrice(),prodOrdered.get(i).getSubtotal());
             }
-       
-        System.out.printf("Staff name : \n");
-        System.out.printf("No. \t Item Code \t Product \t Quantity \t Price      Subtotal \n");
-        System.out.printf("----------------------------------------------------------------------------\n");
-        if(prodNo[v] > 0){
-            for(int x = 0; x < num; x++){
-                order.addList(prodNo[x], quantity[x], no++);
+            System.out.printf("----------------------------------------------------------------------------\n");
+            System.out.printf("\t\t\t\t\t\t\t  Total =>\n\n\n");
+
+            System.out.printf("Product List\n");
+            System.out.printf("------------\n");
+            for(int i = 0; i < Product.getProductList().size();i++ ){
+                int x = i + 1;
+                System.out.print(""+x+"."+Product.getProductList().get(i).getProductName()+"       ");
+                System.out.println(Product.getProductList().get(i).getPrice());
             }
-        }
-        
-        System.out.printf("----------------------------------------------------------------------------\n");
-        System.out.printf("\t\t\t\t\t\t\t  Total =>\n\n\n");
-     
-        System.out.printf("Product List\n");
-        System.out.printf("------------\n");
-        for(int i = 0; i < Product.getProductList().size();i++ ){
-            int x = i + 1;
-        System.out.print(""+x+"."+Product.getProductList().get(i).getProductName()+"       ");
-        System.out.println(Product.getProductList().get(i).getPrice());
-        }
-        System.out.printf("\n\nEnter product No. => ");
-        if(prodNo[v] > 0)
+            System.out.printf("\n\nEnter product No. => ");
+//            if(prodNo[v] > 0)
+//                v++;
+//            prodNo[v] = scn.nextInt();
+            orderNo = scn.nextInt();
+            System.out.printf("Enter Quantity => "); 
+            qty = scn.nextInt();
+            
+            System.out.printf("continue add ? > "); 
+            yes = scn.next().charAt(0);
+            prodOrdered.add(Product.getProductList().get(orderNo - 1));
+            prodOrdered.get(v).calculateSub(qty);
             v++;
-        prodNo[v] = scn.nextInt();
-        System.out.printf("Enter Quantity => "); 
-        quantity[v] = scn.nextInt();
-        System.out.printf("continue add ? > \n"); 
-        yes = scn.next().charAt(0);
-        
         }while((Character.toUpperCase(yes))  == 'Y');
         
         System.out.printf("Customer Name >"); 
