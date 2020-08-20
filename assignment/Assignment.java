@@ -15,19 +15,11 @@ public class Assignment {
         Product.addProduct("Futons","F1001",150,700,"10*10*10","Mr. Soh",50);
         Product.addProduct("Lockers","L1001",150,1000,"10*10*10","Mr. Thiow",50);
         
-//        Product.addProduct();
-//        System.out.print("\nProduct List\n");
-//        Product.displayProduct();
-        Product.searchProduct();
-        
-//        String y=new String("Y");
-//        do{
-//            System.out.println("Add product(Y/N) ?>> ");
-//            y = src.nextLine();
-//            if(y.equalsIgnoreCase("Y")){
-//                addProduct();
-//            }
-//        }while(y=="Y");
+       Product.addProduct();
+//      Product.displayProduct();
+//      Product.removeProd();
+//      Product.searchProduct();
+
         
         
     }
