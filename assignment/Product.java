@@ -6,6 +6,7 @@
 package assignment;
 
 
+import static java.lang.System.exit;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -101,13 +102,22 @@ public class Product {
        System.out.print("Enter the product name :");
        String prodName=src.nextLine();
        
-    do{
+//    do{
        System.out.print("Enter the product code :");
        String prodCode=src.nextLine();
-       checkCode(prodCode);
-       String checkedProdCode=prodCode;
-       }while(false);
-       
+//       if(prodCode.length()!=5){
+//           System.out.print("Invalid Input!");
+//       }
+//       else{
+//           for(int i=0;i<=prodCode.length();i++){
+//               if(prodCode.charAt(0)(.matches("[0-9]+"))){
+//                   System.out.print("Invalid input!");
+//               }
+//               
+//           }
+//       }
+//    }while(false);
+//       
        System.out.print("Enter the cost :");
        double prodCost=src.nextDouble();
        System.out.print("Enter the selling price :");
@@ -186,7 +196,7 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                 
-                break;
+            break;
                
             case 2:
                 System.out.print("\nEnter the product name :");
@@ -200,7 +210,7 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                     
-                break;
+            break;
             
             case 3:
                 System.out.print("\nEnter the product costs :");
@@ -214,7 +224,7 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                     
-                break;
+            break;
                 
              case 4:
                 System.out.print("\nEnter the product price :");
@@ -228,7 +238,7 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                     
-                break;   
+            break;   
                 
                 
             case 5:
@@ -244,7 +254,7 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                 
-                break;
+            break;
                 
              case 6:
                 
@@ -259,7 +269,7 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                 
-                break;
+            break;
             
             case 7:
                 
@@ -274,7 +284,9 @@ public class Product {
                     displayAllProd(foundIndexList); // Call the displayAllEmp with indexList parameter, so it print the employee of that indexes
                     System.out.printf("\n%d results found.\n", foundIndexList.size());
                 
-                break;
+            break;
+            
+            default: System.out.println("Invalid input."); 
         }
 
         
@@ -311,6 +323,157 @@ public class Product {
         
     }
     
+    public static void modifyProd(){
+        Scanner src=new Scanner(System.in);
+        ArrayList<Integer> foundIndexList = new ArrayList<>();
+        displayAllProd();
+        int temp=0;
+
+        do{
+            System.out.print("\n\nEnter the number that you want to modify :");
+            int modify=src.nextInt();
+            if(modify<=0 || modify>=8){
+                System.out.print("Invalid message!");
+                exit(-1);
+            }
+            else{
+                System.out.print("1.Product Code\n2.Prodcut Name\n3.Product Costs\n4.Product Price\n5.Product Size\n6.Product Supplier\n7.Product stock");
+                int option=Menu.getInput();
+                switch(option){
+                case 1:
+                    System.out.print("\nEnter the new product code :");
+                    src.nextLine();
+                    String modifyCode = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    char ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setProductCode(modifyCode);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                case 2:
+                    System.out.print("\nEnter the new product Name :");
+                    src.nextLine();
+                    String modifyName = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setProductName(modifyName);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                case 3:
+                    System.out.print("\nEnter the new product costs :");
+                    src.nextLine();
+                    double modifyCost = src.nextDouble();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setCosts(modifyCost);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                case 4:
+                    System.out.print("\nEnter the new product costs :");
+                    src.nextLine();
+                    double modifyPrice = src.nextDouble();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setCosts(modifyPrice);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                case 5:
+                    System.out.print("\nEnter the new product size :");
+                    src.nextLine();
+                    String modifySize = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setSize(modifySize);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                case 6:
+                    System.out.print("\nEnter the new product supplier :");
+                    src.nextLine();
+                    String modifySupplier = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setSupplier(modifySupplier);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                case 7:
+                    System.out.print("\nEnter the new product supplier :");
+                    src.nextLine();
+                    int modifyStock = src.nextInt();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                    productList.get(modify-1).setStock(modifyStock);
+                    System.out.print("Successful modify!\n");
+                    displayAllProd();
+                    }
+                    else{
+                    System.out.print("\n\nModify cancel...");
+                    }
+
+                break;
+
+                default: System.out.println("Invalid input."); 
+                temp=1;
+
+                }
+            }
+            
+        }while(temp==1);
+    }
 }
 
 
