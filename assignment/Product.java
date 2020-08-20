@@ -178,11 +178,19 @@ public class Product {
         Scanner src=new Scanner(System.in);
         ArrayList<Integer> foundIndexList = new ArrayList<>();
         foundIndexList.clear();
+        int temp=0;
+        
         System.out.print("\n\nSearch product by\n");
         System.out.print("-----------------\n");
         System.out.print("1.Product Code\n2.Prodcut Name\n3.Product Costs\n4.Product Price\n5.Product Size\n6.Product Supplier\n7.Product stock");
         int option=Menu.getInput();
-        switch(option){
+        do{
+            if(option<=0 || option >=8){
+            System.out.print("Invalid message!");
+            temp=1;
+        }
+        else{
+            switch(option){
             case 1:
                 
                 System.out.println("\nEnter the product code :");
@@ -287,9 +295,10 @@ public class Product {
             break;
             
             default: System.out.println("Invalid input."); 
+            temp=1;
+            }
         }
-
-        
+        }while(temp==1); 
     }
     
     public static void displayAllProd() { //Display All product in the Product List
@@ -326,15 +335,16 @@ public class Product {
     public static void modifyProd(){
         Scanner src=new Scanner(System.in);
         ArrayList<Integer> foundIndexList = new ArrayList<>();
-        displayAllProd();
+
         int temp=0;
 
         do{
+            displayAllProd();
             System.out.print("\n\nEnter the number that you want to modify :");
             int modify=src.nextInt();
-            if(modify<=0 || modify>=8){
-                System.out.print("Invalid message!");
-                exit(-1);
+            if(modify<=0 || modify>productList.size()){
+                System.out.print("Invalid message!\n\n");
+                temp=1;
             }
             else{
                 System.out.print("1.Product Code\n2.Prodcut Name\n3.Product Costs\n4.Product Price\n5.Product Size\n6.Product Supplier\n7.Product stock");
@@ -355,6 +365,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
+                    temp=0;
 
                 break;
 
@@ -373,7 +384,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
-
+                    temp=0;
                 break;
 
                 case 3:
@@ -391,7 +402,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
-
+                    temp=0;
                 break;
 
                 case 4:
@@ -409,7 +420,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
-
+                    temp=0;
                 break;
 
                 case 5:
@@ -427,7 +438,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
-
+                    temp=0;
                 break;
 
                 case 6:
@@ -445,7 +456,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
-
+                    temp=0;
                 break;
 
                 case 7:
@@ -463,7 +474,7 @@ public class Product {
                     else{
                     System.out.print("\n\nModify cancel...");
                     }
-
+                    temp=0;
                 break;
 
                 default: System.out.println("Invalid input."); 
