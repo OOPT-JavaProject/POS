@@ -342,7 +342,7 @@ public class Membership {
     
     @Override
     public String toString(){
-        return "Customer Name: "+custName+"\nMembership ID: "+membershipID+"\nContact number: "+phoneNo+"\nHousing Address: "+address+"\nLevel of membership: "+level+"\n";
+        return "\nCustomer Name: "+custName+"\nMembership ID: "+membershipID+"\nContact number: "+phoneNo+"\nHousing Address: "+address+"\nLevel of membership: "+level+"\nDate Joined: "+joinedDate;
     }
     
 }
