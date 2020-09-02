@@ -16,10 +16,10 @@ public class Assignment {
         Product.addProduct("Lockers","L1001",150,1000,"10*10*10","Mr. Thiow",50);
         
       Product.addProduct();
-      Product.displayProduct();
-      Product.removeProd();
-      Product.searchProduct();
-      Product.modifyProd();
+//      Product.displayProduct();
+//      Product.removeProd();
+//      Product.searchProduct();
+//      Product.modifyProd();
 
         
         
