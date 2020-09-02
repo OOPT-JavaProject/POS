@@ -15,11 +15,13 @@ public class Assignment {
         Product.addProduct("Futons","F1001",150,700,"10*10*10","Mr. Soh",50);
         Product.addProduct("Lockers","L1001",150,1000,"10*10*10","Mr. Thiow",50);
         
-      Product.addProduct();
-//      Product.displayProduct();
-//      Product.removeProd();
-//      Product.searchProduct();
-//      Product.modifyProd();
+//        Product.addProduct();
+//          Product.displayProdStaff();
+//          Product.removeProd();
+//          Product.displayProdStaff();
+//        Product.searchProduct();
+//        Product.modifyProd();
+        Product.addStock();
 
         
         
