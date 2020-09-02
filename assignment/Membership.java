@@ -305,7 +305,7 @@ public class Membership {
                     do{
                         System.out.print("Enter a membership ID: ");
                         cID=POS.scan.nextLine();
-                    }while(cID.length()!=6||cID.charAt(0)!='M'||cID.charAt(1)!='L');
+                    }while(cID.length()!=6||cID.charAt(0)!='M'||cID.charAt(1)!='S');
                     for(Membership m:membershipList){
                         if(cID.equals(m.membershipID))
                             searchedList.add(membershipList.indexOf(m));
