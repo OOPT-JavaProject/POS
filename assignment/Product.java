@@ -189,10 +189,9 @@ public class Product {
             System.out.print("\nEnter the product size :");
             prodSize=src.nextLine();
 
-                if(!prodSize.matches("")){
-                System.out.print("----------Invalid Input!Cannot include alphabet.--------");
+                if(!prodSize.matches("-?\\d+\\*-?\\d+\\*-?\\d+")){
+                System.out.print("-------Cannot include alphabet and Must follow N*N*N.-------");
                     temp=1;
-                    break;
                 }
                 else{
                     temp=0;
@@ -201,13 +200,12 @@ public class Product {
        }while(temp==1);
        System.out.print("-----------------COMPLETE-----------------\n");  
     //----------------------------------------------------SUPPLIER---------------------------------------------------------------------
-    src.nextLine();
     String prodSupplier;   
     do{
             System.out.print("\nEnter the supplier :");
             prodSupplier=src.nextLine();
             for(int i=0;i<prodSupplier.length();i++){
-                if(Character.isDigit(prodCode.charAt(i))){
+                if(Character.isDigit(prodSupplier.charAt(i))){
                 System.out.print("----------Invalid Input!Cannot include digit.--------");
                     temp=1;
                     break;
@@ -249,7 +247,7 @@ public class Product {
         displayAllProd();
     }
     
-    
+    //-----------------------------------------------------------------------Search function-----------------------------------------------------------
     public static void searchProduct(){
 
         Scanner src=new Scanner(System.in);
@@ -573,6 +571,7 @@ public class Product {
 //    
     public static void addStock(){
         Scanner src=new Scanner(System.in);
+        int addStock=0;
         int temp=0;
         int newStock=0;
         ArrayList<Integer> foundIndexList = new ArrayList<>();
@@ -581,27 +580,39 @@ public class Product {
         do{
             System.out.print("\n\nEnter the number that you want to add product :");
             int addProduct=src.nextInt();
-            if(addProduct<=0 || addProduct>productList.size()){
+            if(addProduct<=0 || addProduct>productList.size()){ //cannot be negative and out of range of the arraylist
                 System.out.print("Invalid message!\n\n");
                 temp=1;
             }
             else{
-                System.out.print("Enter the quantity : ");
-                int addStock=src.nextInt();
-                System.out.print("Confirm to add stock?(Y/N) > ");
+                do{
+                        System.out.print("\nEnter the quantity : ");
+                    try{
+                        addStock=src.nextInt();
+                        if(addStock<=0){
+                            System.out.print("---------------Invalid Input!---------------");
+                        }
+                    }
+                    catch(Exception e){
+                    System.out.print("----------Must enter a number!--------------");
+                    temp=1;
+                    src.next();
+                    }
+                }while(addStock<=0);
+                System.out.print("\nConfirm to add stock?(Y/N) > ");
                 char ans=src.next().charAt(0);
                 if(Character.toUpperCase(ans)=='Y'){
-                   newStock=addStock+productList.get(addProduct-1).getStock();
-                   productList.get(addProduct-1).setStock(newStock);
-                   System.out.print("Successful add!\n");
-                   displayAllProd();
+                    newStock=addStock+productList.get(addProduct-1).getStock(); //newStock=userinput+sotck inside arrayList
+                    productList.get(addProduct-1).setStock(newStock);//put new stock inside the arrayList
+                    System.out.print("Successful add!\n");
+                    displayAllProd();
                 }
                 else{
-                    System.out.print("\n\nAdd Product cancel...");
+                    System.out.print("\nAdd Product cancel...");
                     temp=1;
-                }
+                }    
             }
-        }while(temp==1);           
+        }while(temp==1 || addStock<=0);  //loop while get temp=1 and addStock is 0 or negative      
     }
 }
 
