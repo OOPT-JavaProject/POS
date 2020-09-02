@@ -10,28 +10,40 @@ public class Ordering {
     
     private String staffName, custName,phoneNum, location;
     private String orderID;
-    private double total, deposit, balance, cost = 0;
-    private SimpleDateFormat form = new SimpleDateFormat("dd/MM/yyyy");  
-    private Date date = new Date();  
+    private double total, deposit, balance, cost = 0, totSub, memberDis;
+    private static SimpleDateFormat form = new SimpleDateFormat("dd/MM/yyyy");  
+    private static Date date = new Date();  
+    private String dateStr;
     private ArrayList<Product> prodOrdered = new ArrayList <Product>();
     public static ArrayList<Ordering> transaction = new ArrayList <Ordering>();
+    private double deliveryFees = 150;
     public Ordering() {
     }
 
-    public Ordering(String staffName, String custName, String phoneNum, String location, String orderID, double total, ArrayList<Product> prodOrdered , double deposit) {
+    public Ordering(String staffName, String custName, String phoneNum, String location, String orderID, double totSub, ArrayList<Product> prodOrdered , double deposit , String dateStr) {
         this.staffName = staffName;
         this.custName = custName;
         this.phoneNum = phoneNum;
         this.location = location;
         this.orderID = orderID;
-        this.total = total;
+        this.totSub = totSub;
         this.prodOrdered = prodOrdered;
         this.deposit = deposit;
         this.balance = (this.total - this.deposit);
         for(int i=0;i < prodOrdered.size();i++ ){
             this.cost += prodOrdered.get(i).getSubCost();
         }
-        
+        this.dateStr = dateStr;
+        for(int j = 0; j < Membership.getMemList().size();j++){
+            if(custName.equalsIgnoreCase(Membership.getMemList().get(j).getCustName())){
+                if(Membership.getMemList().get(j).getLevel().equalsIgnoreCase("Sliver")){
+                    memberDis = 0.05;
+                }else{
+                    memberDis = 0.1;
+                }
+            }
+        }
+//        this.total = totSub + deliveryFees +
     }
 
     public String getStaffName() {
@@ -130,11 +142,11 @@ public class Ordering {
                 total += prodOrdered.get(x).getSubtotal();
             }
             if(i == 0)
-            transaction.add(new Ordering("yan","pipi","0173391006","kepong","I001",total,prodOrdered,300));
+            transaction.add(new Ordering("yan","pipi","0173391006","kepong","I001",total,prodOrdered,300,"03/05/2020"));
             if(i == 1)
-            transaction.add(new Ordering("yan","coco","0123656699","Selayang","I002",total,prodOrdered,400));
+            transaction.add(new Ordering("yan","coco","0123656699","Selayang","I002",total,prodOrdered,400,"03/05/2020"));
             if(i == 2)
-            transaction.add(new Ordering("Ben","shing sheng","0125588639","Petaling jaya","I003",total,prodOrdered,500));
+            transaction.add(new Ordering("Ben","shing sheng","0125588639","Petaling jaya","I003",total,prodOrdered,500,"06/06/2020"));
         }
     }
     
@@ -143,13 +155,14 @@ public class Ordering {
     public static void addOrder(){
       
         char yes;
-        int orderNo = 0, qty, paymentMet = 0;
-        double total = 0, deposit =0;
+        int orderNo = 0, qty, paymentMet = 0, memberKey = 0, memberNo = -1;
+        double total = 0, deposit =0, totSub = 0, memberDis = 0;
         int ordernum = transaction.size();
         String custName, phoneNum, staffName, location = "", cardNum;
         Scanner scn = new Scanner(System.in);
         char[] orderIDnum = {'I', '0', '0', '0'};
         String odrID;
+        String dateStr = form.format(date);
         if(transaction.size() > 0){
                 orderIDnum = Ordering.getTransaction().get(--ordernum).getOrderID().toCharArray();
         }
@@ -195,14 +208,14 @@ public class Ordering {
                     qty = scn.nextInt();
                 }while(qty <= 0 || qty > prodOrdered.get(v).getStock());
                 prodOrdered.get(v).calculateSub(qty);
-                System.out.println("\n\nDATE       : "+form.format(date)+"\t\t\t\t\t\t"+"  ORDER ID: " + odrID);
+                System.out.println("\n\nDATE       : "+dateStr+"\t\t\t\t\t\t"+"  ORDER ID: " + odrID);
                 System.out.println("STAFF NAME : "+ staffName);
                 System.out.printf("No. \t ITEM CODE \t PRODUCT \t QUANTITY \t PRICE      \tSUBTOTAL \n");
                 System.out.printf("--------------------------------------------------------------------------------\n");
                 if(orderNo > 0){
                     for(int i = 0; i < prodOrdered.size();i++ ){
                         System.out.printf("%2d %15s %13s %13d  %14.2f  %16.2f\n",i+1, prodOrdered.get(i).getProductCode(),prodOrdered.get(i).getProductName(),prodOrdered.get(i).getQtyOrder(),prodOrdered.get(i).getPrice(),prodOrdered.get(i).getSubtotal());
-                        total += prodOrdered.get(i).getSubtotal();
+                        totSub += prodOrdered.get(i).getSubtotal();
                     }
                 }
                 System.out.printf("--------------------------------------------------------------------------------\n");
@@ -218,20 +231,48 @@ public class Ordering {
             System.out.printf("\nCustomer Name    >");
             scn.nextLine(); 
             custName = scn.nextLine();
-            
-            do{
-                System.out.printf("phone number     >");
-                phoneNum = scn.nextLine();
-            }while(!(phoneNum.length()==10 || phoneNum.length()== 11 ));
+            for(int j = 0; j < Membership.getMemList().size();j++){
+                if(custName.equalsIgnoreCase(Membership.getMemList().get(j).getCustName())){
+                    System.out.printf("\n%s is a %s Member\n",Membership.getMemList().get(j).getCustName(),Membership.getMemList().get(j).getLevel());
+                    memberKey = 1;
+                    memberNo = j;
+                    if(Membership.getMemList().get(j).getLevel().equalsIgnoreCase("Sliver")){
+                        memberDis = 0.05;
+                    }else{
+                        memberDis = 0.1;
+                    }
+                }
+            }
+            if(memberKey == 0){
+                do{
+                    System.out.printf("phone number     >");
+                    phoneNum = scn.nextLine();
+                }while(!(phoneNum.length()==10 || phoneNum.length()== 11 ));
+            }
+            else {
+                phoneNum = Membership.getMemList().get(memberNo).getPhoneNo();
+            }
             do{
                 System.out.printf("Delivery ? (Y/N) >"); 
                 yes = scn.next().charAt(0);
             }while(!((Character.toUpperCase(yes))  == 'Y' || (Character.toUpperCase(yes))  == 'N'));
             
             if((Character.toUpperCase(yes))  == 'Y'){
-                System.out.printf("Location         >");
-                scn.nextLine();
-                location = scn.nextLine();
+                if(memberKey == 1){
+                    System.out.printf("The the address is %s ?",Membership.getMemList().get(memberNo).getAddress());
+                    do{
+                        System.out.print("(Y/N)>");
+                        yes = scn.next().charAt(0);
+                    }while(!((Character.toUpperCase(yes))  == 'Y' || (Character.toUpperCase(yes))  == 'N'));
+                }
+                if((Character.toUpperCase(yes))  == 'N' || memberKey == 0){
+                    System.out.printf("Location         >");
+                    scn.nextLine();
+                    location = scn.nextLine();
+                }
+                else{
+                    location = Membership.getMemList().get(memberNo).getAddress();
+                }
             }
             
             System.out.println("\n\nPAYMENT METHOD\n==============\n1.Credit/Debit Card \n2.Cash\n");
@@ -260,7 +301,7 @@ public class Ordering {
                 yes = scn.next().charAt(0);
             }while(!((Character.toUpperCase(yes))  == 'Y' || (Character.toUpperCase(yes))  == 'N'));
             if((Character.toUpperCase(yes))  == 'Y' ){
-               transaction.add(new Ordering(staffName,custName,phoneNum,location ,odrID ,total,prodOrdered,deposit)); 
+               transaction.add(new Ordering(staffName,custName,phoneNum,location ,odrID ,totSub,prodOrdered,deposit,dateStr)); 
                 ordernum = transaction.size();
                 ordernum--;
                 displayReceipt(ordernum);
@@ -277,8 +318,8 @@ public class Ordering {
     }
    
     
-    public static void addtrans(String staffName, String custName, String phoneNum, String location,String orderID, double total, ArrayList<Product> prodOrdered, double deposit){
-        transaction.add(new Ordering(staffName,custName,phoneNum,location,orderID,total,prodOrdered, deposit));
+    public static void addtrans(String staffName, String custName, String phoneNum, String location,String orderID, double total, ArrayList<Product> prodOrdered, double deposit, String dateStr){
+        transaction.add(new Ordering(staffName,custName,phoneNum,location,orderID,total,prodOrdered, deposit,dateStr));
         
     }
    
@@ -288,7 +329,7 @@ public class Ordering {
         for(int x = 0; x < transaction.size();x++){
             String odrID = new String(transaction.get(x).getOrderID());
         System.out.printf("\n\nSTAFF NAME : %s \n",transaction.get(x).getStaffName());
-        System.out.printf("DATE       : \t\t\t\t\t\t\t ORDER ID:%6s\n",odrID);
+        System.out.printf("DATE       : %s\t\t\t\t\t\t ORDER ID:%6s\n",transaction.get(x).dateStr,odrID);
         System.out.printf("No. \t ITEM CODE\t PRODUCT \t QUANTITY \t PRICE     \tSUBTOTAL \n");
         System.out.printf("--------------------------------------------------------------------------------\n");
             for(int i = 0; i < transaction.get(x).getProdOrdered().size();i++ ){
@@ -311,7 +352,7 @@ public class Ordering {
         int x = no;
         String odrID = new String(transaction.get(x).getOrderID());
         System.out.printf("\n\nSTAFF NAME : %s \n",transaction.get(x).getStaffName());
-        System.out.printf("DATE       : \t\t\t\t\t\t\t ORDER ID:%6s\n",odrID);
+        System.out.printf("DATE       : %s\t\t\t\t\t\t ORDER ID:%6s\n",transaction.get(x).dateStr,odrID);
         System.out.printf("No. \t ITEM CODE\t PRODUCT \t QUANTITY \t PRICE     \tSUBTOTAL \n");
         System.out.printf("--------------------------------------------------------------------------------\n");
             for(int i = 0; i < transaction.get(x).getProdOrdered().size();i++ ){
@@ -325,16 +366,6 @@ public class Ordering {
         System.out.println("PHONE NUMBER   : " +transaction.get(x).getPhoneNum());
         System.out.println("LOCATION       : "+transaction.get(x).getLocation()+"\n\n\n\n\n");
 
-    }
-    
-    public static void displaySummary(){
-        System.out.printf("Staff name : \n");
-        System.out.printf("Date       : \t\t\t\t\t\t\t order ID: \n");
-        System.out.printf("Order Code \t order total  \t total Cost \t Total Profit \n");
-        System.out.printf("----------------------------------------------------------------------------\n");
-        System.out.printf("----------------------------------------------------------------------------\n");
-        System.out.printf("\t\t\t\t\t\t\t  Total Cost=>\n");
-        System.out.printf("\t\t\t\t\t\t\t  Total Profit=>\n");
     }
     
     
@@ -439,13 +470,14 @@ public class Ordering {
                 System.out.println("1.Add product ");
                 System.out.println("2.Modify product quantity");
                 System.out.println("3.Remove a product");
-                select = scn.nextInt();
-                
+                do{
+                    System.out.printf("\nChoose an action > ");
+                    select = scn.nextInt();
+                }while(select < 1 || select > 3);
                 switch(select){
                     case 1: 
-                        
                         System.out.printf("\n\n\nProduct List\n");
-                         System.out.printf("------------\n");
+                        System.out.printf("------------\n");
                         for(int v = 0; v < Product.getProductList().size();v++ ){
                             int x = v + 1;
                             System.out.print(""+x+"."+Product.getProductList().get(v).getProductName()+"       ");
@@ -461,15 +493,23 @@ public class Ordering {
                          }while(qty <= 0 || qty > Product.getProductList().get(orderNo - 1).getStock());
                         break;
                     case 2:
-                        System.out.printf("\n\nEnter No. to change the quantity => ");
-                        num = scn.nextInt();
-                        System.out.printf("%2d %15s %13s %13d  %14.2f  %16.2f\n",num,  transaction.get(mod).getProdOrdered().get(num-1).getProductCode(), transaction.get(mod).getProdOrdered().get(num-1).getProductName(), transaction.get(mod).getProdOrdered().get(num-1).getQtyOrder(), transaction.get(mod).getProdOrdered().get(num-1).getPrice(), transaction.get(mod).getProdOrdered().get(num-1).getSubtotal());
-                        System.out.printf("Enter a new quantity > ");
-                        qty = scn.nextInt();
+                        do{
+                            System.out.printf("\n\nEnter No. to change the quantity => ");
+                            num = scn.nextInt();
+                        }while(num <=0 || num > transaction.get(mod).getProdOrdered().size()); 
+                        
+                        System.out.printf("\n\n%2d %15s %13s %13d  %14.2f  %16.2f\n\n",num,  transaction.get(mod).getProdOrdered().get(num-1).getProductCode(), transaction.get(mod).getProdOrdered().get(num-1).getProductName(), transaction.get(mod).getProdOrdered().get(num-1).getQtyOrder(), transaction.get(mod).getProdOrdered().get(num-1).getPrice(), transaction.get(mod).getProdOrdered().get(num-1).getSubtotal());
+                        do{
+                            System.out.printf("Enter a new quantity > ");
+                            qty = scn.nextInt();
+                        }while(qty <= 0 || qty > Product.getProductList().get(orderNo - 1).getStock());
+                       
                         break;
                     case 3:
-                        System.out.printf("\n\nEnter No. to remove the product ordered => ");
-                        num = scn.nextInt();
+                        do{
+                            System.out.printf("\n\nEnter No. to remove the product ordered => ");
+                            num = scn.nextInt();
+                        }while(orderNo <= 0 || orderNo > Product.getProductList().size());
                 }
             break;
         }
@@ -535,10 +575,10 @@ public class Ordering {
     }
     
     public static void searchOrder(){
-        int select;
+        int select, record = 0;
         Ordering searchOrd = new Ordering();
         Scanner scn = new Scanner(System.in);
-        System.out.println("Search menu");
+        System.out.println("\n\nSearch menu");
         System.out.println("1.Staff name");
         System.out.println("2.Customer Name");
         System.out.println("3.Customer phone number");
@@ -561,6 +601,7 @@ public class Ordering {
                 for(Ordering o: transaction){
                     if(o.staffName.equalsIgnoreCase(searchOrd.staffName)){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -574,6 +615,7 @@ public class Ordering {
                 for(Ordering o: transaction){
                     if(o.custName.equalsIgnoreCase(searchOrd.custName)){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -582,11 +624,15 @@ public class Ordering {
             case 3:
                 i = 0;
                 scn.nextLine(); 
-                System.out.print("Enter a customer phone number >");
-                searchOrd.phoneNum= scn.nextLine();
+                do{
+                    System.out.print("Enter a customer phone number >");
+                    searchOrd.phoneNum= scn.nextLine();
+                }while(!(searchOrd.phoneNum.length()==10 || searchOrd.phoneNum.length()== 11 ));
+                
                 for(Ordering o: transaction){
                     if(o.phoneNum.equalsIgnoreCase(searchOrd.phoneNum)){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -600,6 +646,7 @@ public class Ordering {
                 for(Ordering o: transaction){
                     if(o.location.equalsIgnoreCase(searchOrd.location)){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -613,6 +660,7 @@ public class Ordering {
                 for(Ordering o: transaction){
                     if(o.orderID.equalsIgnoreCase(searchOrd.orderID)){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -622,11 +670,14 @@ public class Ordering {
             case 6:
                 i = 0;
                 scn.nextLine(); 
-                System.out.print("Enter a total >");
-                searchOrd.total= scn.nextDouble();
+                do{
+                    System.out.print("Enter a total >");
+                    searchOrd.total= scn.nextDouble();
+                }while(searchOrd.total < 0);
                 for(Ordering o: transaction){
                     if(o.total == searchOrd.total){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -635,11 +686,14 @@ public class Ordering {
             case 7:
                 i = 0;
                 scn.nextLine(); 
-                System.out.print("Enter deposit >");
-                searchOrd.deposit= scn.nextDouble();
+                do{
+                    System.out.print("Enter deposit >");
+                    searchOrd.deposit= scn.nextDouble();
+                }while(searchOrd.deposit < 0);
                 for(Ordering o: transaction){
                     if(o.deposit == searchOrd.deposit){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
@@ -648,16 +702,21 @@ public class Ordering {
             case 9:
                 i = 0;
                 scn.nextLine(); 
-                System.out.print("Enter balance >");
-                searchOrd.balance= scn.nextDouble();
+                do{
+                    System.out.print("Enter balance >");
+                    searchOrd.balance= scn.nextDouble();
+                }while(searchOrd.balance < 0);
+                
                 for(Ordering o: transaction){
                     if(o.balance == searchOrd.balance){
                         displayReceipt(i);
+                        record++;
                     }
                     i++;
                 }
             break;
         }
+        
     }
     
     public static void orderSummary(){
