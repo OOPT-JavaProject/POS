@@ -275,7 +275,7 @@ public class Membership {
         do{
             ArrayList<Integer> searchedList=new ArrayList<>();
             System.out.println("\n\n\nHere are the fields that can be searched: ");
-            System.out.println("1. Customer name. \n2. Membership ID.\n3.Category.\n0. Back to menu.");
+            System.out.println("1. Customer name. \n2. Membership ID.\n3. Category.\n0. Back to menu.");
             do{  
                 validAc=1;
                 System.out.print("Please select one: ");
@@ -316,8 +316,8 @@ public class Membership {
                 case 3: 
                     searchedList.clear();
                     do {
-                        System.out.print("Select one category to search: ");
-                        System.out.println("\n1. Silver\n2. Gold\nChoose 1 or 2: ");
+                        System.out.println("Select one category to search: ");
+                        System.out.print("\n1. Silver\n2. Gold\nChoose 1 or 2: ");
                         searchCat = POS.scan.nextInt();
                         if (searchCat < 1 && searchCat > 2) 
                             System.out.println("Invalid Input.");
