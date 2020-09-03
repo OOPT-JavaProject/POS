@@ -32,16 +32,19 @@ public final class Menu {
         System.out.println("1 => Manage Orders");
         System.out.println("2 => Manage Product");
         System.out.println("3 => Manage User");
-        System.out.println("4 => Change User");
+        System.out.println("4 => Manage Membership");
+        System.out.println("5 => Change User");
         System.out.println("0 => Quit");
     }
     
     public static void displayManagerOrderMenu() {
-        System.out.println("\nManage Order:");
-        System.out.println("1 => Display All Orders");
-        System.out.println("2 => Modify Order");
-        System.out.println("3 => Remove Order");
+        System.out.println("\nManger Order:");
+        System.out.println("1 => Accept Orders");
+        System.out.println("2 => Display All Orders");
+        System.out.println("3 => Modify Order");
         System.out.println("4 => Search Order");
+        System.out.println("5 => Order Summary ");
+        System.out.println("6 => Remove order ");
         System.out.println("0 => Return to main menu");
     }
     
@@ -52,6 +55,7 @@ public final class Menu {
         System.out.println("3 => Modify Product");
         System.out.println("4 => Remove Product");
         System.out.println("5 => Search Product");
+        System.out.println("6 => Add Product Stocks");
         System.out.println("0 => Return to main menu");
     }
     
@@ -62,6 +66,18 @@ public final class Menu {
         System.out.println("3 => Modify User");
         System.out.println("4 => Remove User");
         System.out.println("5 => Search User");
+        System.out.println("6 => Display All Employees Salary");
+        System.out.println("0 => Return to main menu");
+    }
+    
+    public static void displayManagerMembershipMenu() {
+        System.out.println("\nManage Membership:");
+        System.out.println("1 => Display All Memberships");
+        System.out.println("2 => Add Memberships");
+        System.out.println("3 => Modify Memberships");
+        System.out.println("4 => Remove Memberships");
+        System.out.println("5 => Search Memberships");
+        System.out.println("6 => Display All Activity");
         System.out.println("0 => Return to main menu");
     }
     
@@ -91,19 +107,21 @@ public final class Menu {
         System.out.println("\nHere are the function that can perform by you:");
         System.out.println("1 => Accept Orders");
         System.out.println("2 => Display All Products");
-        System.out.println("3 => Display Receipts");
+        System.out.println("3 => Display all Receipts");
         System.out.println("4 => Change User");
         System.out.println("0 => Quit");
     }
     
-    public static void displayStaffOrderMenu() {
-        System.out.println("\nManger Order:");
-        System.out.println("1 => Accept Orders");
-        System.out.println("2 => Display All Orders");
-        System.out.println("3 => Modify Order");
-        System.out.println("4 => Search Order");
-        System.out.println("0 => Return to main menu");
-    }
+//    public static void displayStaffOrderMenu() {
+//        System.out.println("\nManger Order:");
+//        System.out.println("1 => Accept Orders");
+//        System.out.println("2 => Display All Orders");
+//        System.out.println("3 => Modify Order");
+//        System.out.println("4 => Search Order");
+//        System.out.println("5 => Order Summary ");
+//        System.out.println("6 => Remove order ");
+//        System.out.println("0 => Return to main menu");
+//    }
     
     public static int getInput() {
         while(true) {

@@ -11,6 +11,9 @@ public class Membership {
     private double rate;
     private LocalDate joinedDate;
     private static ArrayList<Membership> membershipList = new ArrayList<Membership>();
+    private static int addMemberCount = 0;
+    private static int removeMemberCount = 0;
+    private static int modifiedMemberCount = 0;
     //constructors
     public Membership(String custName, String membershipID, String phoneNo,String address,String level,LocalDate joinedDate){
         this.custName=custName;
@@ -108,6 +111,7 @@ public class Membership {
         Membership newMem=new Membership(custName,membershipID,phoneNo,address,level.toUpperCase(),LocalDate.now());
         membershipList.add(newMem);
         System.out.println("Congratulations on joining as our member "+custName+"! Welcome to the big family!!");
+        addMemberCount++;
         return newMem;
     }
     //membership record
@@ -115,41 +119,43 @@ public class Membership {
         Membership newMem=new Membership(custName,membershipID,phoneNo,address,level.toUpperCase(),joinedDate);
         membershipList.add(newMem);
         System.out.println("Congratulations on joining as our member "+custName+"! Welcome to the big family!!");
+        addMemberCount++;
     }
     //from menu
     public static void displayMember(){
         System.out.println("Member that holds a gold membership:");
-        System.out.println("____________________________________________________________________________________________________________________________________");
-        System.out.printf("%4s||\t%10s||\t%6s||\t%8s||%35s||\t%15s||%16s\n", "[No]", "Name", "ID", "Phone Number", "Address", "Level of service","Date Joined");
-        System.out.println("------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("__________________________________________________________________________________________________________________________________________");
+        System.out.printf("%4s||\t%10s||\t%6s||\t%12s||%42s||\t%15s||%16s\n", "[No]", "Name", "ID", "Phone Number", "Address", "Level of service","Date Joined");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------");
         for (Membership m:membershipList)
         {
             if(m.level.equals("GOLD"))
-                System.out.printf("%4s||\t%10s||\t%6s||\t%10s||\t%15s||\t%15s||\t%s\n", membershipList.indexOf(m)+1,m.custName, m.membershipID, m.phoneNo, m.address, m.level,m.joinedDate);
+                System.out.printf("%4s||\t%10s||\t%6s||\t%12s||\t%40s||\t%16s||%16s\n", membershipList.indexOf(m)+1,m.custName, m.membershipID, m.phoneNo, m.address, m.level,m.joinedDate);
         }
         System.out.println("Member that holds a silver membership:");
-        System.out.println("____________________________________________________________________________________________________________________________________");
-        System.out.printf("%4s||\t%10s||\t%6s||\t%8s||%35s||\t%15s||%16s\n", "[No]", "Name", "ID", "Phone Number", "Address", "Level of service","Date Joined");
-        System.out.println("------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("__________________________________________________________________________________________________________________________________________");
+        System.out.printf("%4s||\t%10s||\t%6s||\t%12s||%42s||\t%15s||%16s\n", "[No]", "Name", "ID", "Phone Number", "Address", "Level of service","Date Joined");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------");
         for (Membership m:membershipList)
         {
             if(m.level.equals("SILVER"))
-                System.out.printf("%4s||\t%10s||\t%6s||\t%10s||\t%15s||\t%15s||\t%s\n", membershipList.indexOf(m)+1,m.custName, m.membershipID, m.phoneNo, m.address, m.level,m.joinedDate);
+                System.out.printf("%4s||\t%10s||\t%6s||\t%12s||\t%40s||\t%16s||%16s\n", membershipList.indexOf(m)+1,m.custName, m.membershipID, m.phoneNo, m.address, m.level,m.joinedDate);
         }
     }
     //from search
     public static void displayMember(ArrayList<Integer> searchedList){
         System.out.println("Member searched:");
-        System.out.println("____________________________________________________________________________________________________________________________________");
-        System.out.printf("%4s||\t%10s||\t%6s||\t%8s||%35s||\t%15s||%16s\n", "[No]", "Name", "ID", "Phone Number", "Address", "Level of service","Date Joined");
-        System.out.println("------------------------------------------------------------------------------------------------------------------------------------");
+        System.out.println("__________________________________________________________________________________________________________________________________________");
+        System.out.printf("%4s||\t%10s||\t%6s||\t%12s||%42s||\t%15s||%16s\n", "[No]", "Name", "ID", "Phone Number", "Address", "Level of service","Date Joined");
+        System.out.println("------------------------------------------------------------------------------------------------------------------------------------------");
         for (Integer i:searchedList)
         {
-                System.out.printf("%4s||\t%10s||\t%6s||\t%10s||\t%15s||\t%15s||\t%s\n", searchedList.indexOf(i)+1,membershipList.get(i).custName, membershipList.get(i).membershipID, membershipList.get(i).phoneNo, membershipList.get(i).address,membershipList.get(i).level,membershipList.get(i).joinedDate);
+                System.out.printf("%4s||\t%10s||\t%6s||\t%12s||\t%40s||\t%16s||%16s\n", searchedList.indexOf(i)+1,membershipList.get(i).custName, membershipList.get(i).membershipID, membershipList.get(i).phoneNo, membershipList.get(i).address,membershipList.get(i).level,membershipList.get(i).joinedDate);
         }
     }
     
     public static void modifyMember(){
+       boolean modified = false;
        int choice;
        int action=0;
        int validAc=1;
@@ -194,18 +200,21 @@ public class Membership {
                     }while(newNameC==0);
                     membershipList.get(selectedIndex).custName=newName;
                     System.out.println("Modified successfully!!");
+                    modified = true;
                     break;
                 case 2:
                     System.out.print("Enter a new phone number: ");
                     newPhoneNo=POS.scan.nextLine();
                     membershipList.get(selectedIndex).phoneNo=newPhoneNo;
                     System.out.println("Modified successfully!!");
+                    modified = true;
                     break;
                 case 3: 
                     System.out.print("Enter a new address: ");
                     newAddress=POS.scan.nextLine();
                     membershipList.get(selectedIndex).address=newAddress;
                     System.out.println("Modified successfully!!");
+                    modified = true;
                     break;
                 case 4:
                     if(membershipList.get(selectedIndex).level.equals("SILVER")){
@@ -216,6 +225,7 @@ public class Membership {
                             if(Character.toUpperCase(changeLvl)=='Y'){
                                 membershipList.get(selectedIndex).level="GOLD";
                                 System.out.println("Modified successfully!!");
+                                modified = true;
                             } 
                             else if(Character.toUpperCase(changeLvl)=='N')
                                 break;
@@ -232,9 +242,8 @@ public class Membership {
                 case 5:
                     removeMember(selectedIndex);
                     break;
-                case 0: return;
+                case 0: if (modified) modifiedMemberCount++; return;
                 default: System.out.println("Invalid input. Please enter again."); action = -1;
-                    
             }
         }while(action!=0);
     }
@@ -255,6 +264,7 @@ public class Membership {
         if(Character.toUpperCase(removeYorN)=='Y'){
             System.out.printf("Removed successfully!! %s is no longer a member.",membershipList.get(selectedIndex).custName);
             membershipList.remove(selectedIndex);
+            removeMemberCount++;
         }
         else
             System.out.println("Remove process cancelled.");
@@ -266,6 +276,7 @@ public class Membership {
         if(Character.toUpperCase(removeYorN)=='Y'){
             System.out.printf("Removed successfully!! %s is no longer a member.",membershipList.get(index).custName);
             membershipList.remove(index);
+            removeMemberCount++;
         } 
     }
     
@@ -340,6 +351,14 @@ public class Membership {
         }while(search!=0);
     }
     
+    public static void displayActivity() {
+        LocalDate today = LocalDate.now();
+        System.out.println("Activity of today (" + today + ") :");
+        System.out.println(addMemberCount + " New Member Added.");
+        System.out.println(removeMemberCount + " Existing Members removed.");
+        System.out.println(modifiedMemberCount + " Existing Member modified.");
+        System.out.println("Total activities of today => "+ (addMemberCount + removeMemberCount + modifiedMemberCount));
+    }
     @Override
     public String toString(){
         return "\nCustomer Name: "+custName+"\nMembership ID: "+membershipID+"\nContact number: "+phoneNo+"\nHousing Address: "+address+"\nLevel of membership: "+level+"\nDate Joined: "+joinedDate;

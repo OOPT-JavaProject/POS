@@ -12,12 +12,45 @@ package assignment;
 public class Staff extends Employee{
     public Staff(Employee emp) {
         super(emp.getEmpName(), emp.getEmpID(), emp.getEmpPassword(), emp.getYearJoined(), emp.getAge());
-        Menu menu = new Menu(this);
     }
     public Staff(String empName, String empID, String empPassword, int yearJoined, int age) {
         super(empName, empID, empPassword, yearJoined, age);
     }
     
+    @Override
+    public double rateOfOvertimePay() {
+        return 1.5;
+    }
     
+    @Override
+    public double rateOfCommission() {
+        return 0.1;
+    }
     
+    public double getSalary() {
+        double basicSalary = 2000, hourlyPayRate = 18, overtimeHours, totalSales;
+        
+        System.out.print("Overtime hours worked of the month : ");
+        overtimeHours = POS.scan.nextDouble();
+        System.out.print("Total Sales of the month : ");
+        totalSales = POS.scan.nextDouble();
+        return basicSalary + hourlyPayRate * overtimeHours * rateOfOvertimePay() + totalSales * rateOfCommission();
+    }
+    
+    public void dMenu() {
+        Menu.displayStaffMenu();
+        int sel;
+        do {
+            sel = Menu.getInput();
+            switch (sel) {
+                case 1: Order.addOrder(); break; // Accept Orders
+                case 2: Product.displayAllProd(); break; // Display All Products
+                case 3: Order.displayReceipt(); break; // Display Receipts (transaction history)
+                case 4: POS.changeUser(); return; // Change User(LogOut)
+                case 0: POS.exit(); break; // Quit Program
+                default: System.out.println("Invalid input."); sel = -1;
+            }
+        } while(sel != 0);
+    }
+ 
 }

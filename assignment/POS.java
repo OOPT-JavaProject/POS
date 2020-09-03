@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class POS {
     static Scanner scan = new Scanner(System.in);
     static char cont;
+    static String UserName;
     public static Employee login() {
         String loginID;
         String loginPass;
@@ -18,7 +19,7 @@ public class POS {
             System.out.print("Staff ID: ");
             loginID=scan.nextLine();
             for(int i=0;i<existingEmpList.size();i++){
-                if(loginID.equals(existingEmpList.get(i).getEmpID())){
+                if(loginID.equalsIgnoreCase(existingEmpList.get(i).getEmpID())){
                     do {
                         System.out.print("Staff password: ");
                         loginPass=scan.nextLine();
@@ -32,7 +33,7 @@ public class POS {
                     } while(Character.toUpperCase(cont) == 'Y');
                     break;
                 }
-                else if (i == existingEmpList.size() - 1) System.out.println("ID doesn't exist.");
+                else if (i == existingEmpList.size() - 1) System.out.println("ID doesn't exist."); //if the for loop reached the last emp, means id not found
             }
             System.out.print("Continue to enter another ID?(y=yes): ");
             cont=scan.next().charAt(0);
@@ -61,25 +62,43 @@ public class POS {
         else if(employee.getEmpID().charAt(0) == 'M') {
             System.out.println("Login successfully, you are a manager.");
             Manager manager = new Manager(employee);
+            UserName = manager.getEmpName();
             manager.dMenu();
         }
         else if (employee.getEmpID().charAt(0) == 'S') {
             System.out.println("Login successfully, you are a staff.");
+            Staff staff = new Staff(employee);
+            UserName = staff.getEmpName();
+            staff.dMenu();
             //Menu menu = new Menu();
         }
     }
+    public static void pause(){ 
+        System.out.println("Press Enter key to continue...");
+        try
+        {
+            System.in.read();
+        }  
+        catch(Exception e)
+        {}  
+}
+    
     public static void clearScreen() {  
         System.out.print("\033[H\033[2J");  
-        System.out.flush();  
+        System.out.flush();
     }  
     public static void main(String[] args) {
+        
         Employee.init();
         Product.init();
-        //Order.init();
+        Membership.init();
+        Order.init();
+        //Membership.displayMember();
         for (Employee e: Employee.getEmpList()) { //Print empList (DEBUG PURPOSE)
-            System.out.println(e);
+            //System.out.println(e);
         }
         //Employee.displayAllEmp();
+        //Product.displayProduct();
         displayMenu(login()); //Login before display the user MENU
     }
 }

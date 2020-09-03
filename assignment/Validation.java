@@ -5,6 +5,8 @@
  */
 package assignment;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Z
@@ -31,14 +33,25 @@ public class Validation {
         }
     }
     
-    public static boolean vID(String id) { //validate Employee ID
-        if (Character.toUpperCase(id.charAt(0)) == 'M' || Character.toUpperCase(id.charAt(0)) == 'S') {
+    public static boolean vEmpID(String empID) { //validate Employee ID
+        if (Character.toUpperCase(empID.charAt(0)) == 'M' || Character.toUpperCase(empID.charAt(0)) == 'S') {
             return true;
         }
         else {
             System.out.println("Invalid ID.(E.g M02423, S02425)");
             return false;
         }
+    }
+    
+    public static boolean vEmpIDExist(String empID) { //validate Employee ID exist or not
+        ArrayList<Employee> existingEmpList=Employee.getEmpList();
+        for (Employee existingEmp : existingEmpList) {
+            if (empID.equalsIgnoreCase(existingEmp.getEmpID())) {
+                System.out.println("Employee ID already exist!");
+                return true;
+            }
+        }
+        return false;
     }
     
     public static boolean vPw(String password) { //validate New Password
@@ -101,4 +114,6 @@ public class Validation {
             System.out.println("Invalid Age.");
         }
     }
+    
+    
 }

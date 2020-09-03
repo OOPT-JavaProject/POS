@@ -22,6 +22,9 @@ public class Product {
     private String size;
     private String supplier;
     private int stock;
+    private int qtyOrder;
+    private double subtotal;
+    private double subCost;
     
     
     private static ArrayList<Product> productList=new ArrayList <Product>();
@@ -36,7 +39,17 @@ public class Product {
         this.stock = stock;
         
     }
-
+    
+    public static void init() {
+        Product.addProduct("Sofas","S1001",350,600,"100*50*100","Mr. Lee",50);
+        Product.addProduct("Table","T1001",150,700,"100*100*100","Mr. Cheah",50);
+        Product.addProduct("Beds","B1001",150,800,"100*50*100","Mrs. Teh",50);
+        Product.addProduct("Ottoman","O1001",150,600,"10*10*10","Mr. Kee",50);
+        Product.addProduct("Dressers","D1001",150,800,"10*10*10","Mr. Tan",50);
+        Product.addProduct("Futons","F1001",150,700,"10*10*10","Mr. Soh",50);
+        Product.addProduct("Lockers","L1001",150,1000,"10*10*10","Mr. Thiow",50);
+    }
+    
     public String getProductName() {
         return productName;
     }
@@ -93,10 +106,44 @@ public class Product {
         this.stock = stock;
     }
     
+    public int getQtyOrder() {
+        return qtyOrder;
+    }
+
+    public void setQtyOrder(int qtyOrder) {
+        this.qtyOrder = qtyOrder;
+    }
+
+    public double getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(double subtotal) {
+        this.subtotal = subtotal;
+    }
+    
+    public void calQuantity(int quantity){
+        this.stock -= quantity;
+    }
+    
     @Override
     public String toString() {
         return "-----------------------"+ "\nProduct Name :" + productName + "\nProduct Code :" + productCode + 
                 "\nCosts :" + costs + "\nPrice :" + price + "\nSize :" + size + "\nSupplier :" + supplier + "\nStock :" + stock +"\n";
+    }
+    
+    public void calculateSub(int qty){
+        this.qtyOrder = qty;
+        this.subtotal = qty *  price;
+        this.subCost = qty * costs;
+    }
+
+    public double getSubCost() {
+        return subCost;
+    }
+
+    public void setSubCost(double subCost) {
+        this.subCost = subCost;
     }
     
     public static void addProduct(){
@@ -243,9 +290,9 @@ public class Product {
         return productList;
     }
     
-    public static void displayProduct(){
-        displayAllProd();
-    }
+//    public static void displayProduct(){
+//        displayAllProd();
+//    }
     
     //-----------------------------------------------------------------------Search function-----------------------------------------------------------
     public static void searchProduct(){
@@ -415,160 +462,158 @@ public class Product {
         
     }
     
-//    public static void modifyProd(){
-//        Scanner src=new Scanner(System.in);
-//        ArrayList<Integer> foundIndexList = new ArrayList<>();
-//
-//        int temp=0;
-//
-//        do{
-//            displayAllProd();
-//            System.out.print("\n\nEnter the number that you want to modify :");
-//            int modify=src.nextInt();
-//            if(modify<=0 || modify>productList.size()){
-//                System.out.print("Invalid message!\n\n");
-//                temp=1;
-//            }
-//            else{
-//                System.out.print("1.Product Code\n2.Prodcut Name\n3.Product Costs\n4.Product Price\n5.Product Size\n6.Product Supplier\n7.Product stock");
-//                int option=Menu.getInput();
-//                switch(option){
-//                case 1:
-//                    System.out.print("\nEnter the new product code :");
-//                    src.nextLine();
-//                    String modifyCode = src.nextLine();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    char ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setProductCode(modifyCode);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//
-//                break;
-//
-//                case 2:
-//                    System.out.print("\nEnter the new product Name :");
-//                    src.nextLine();
-//                    String modifyName = src.nextLine();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setProductName(modifyName);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//                break;
-//
-//                case 3:
-//                    System.out.print("\nEnter the new product costs :");
-//                    src.nextLine();
-//                    double modifyCost = src.nextDouble();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setCosts(modifyCost);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//                break;
-//
-//                case 4:
-//                    System.out.print("\nEnter the new product costs :");
-//                    src.nextLine();
-//                    double modifyPrice = src.nextDouble();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setCosts(modifyPrice);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//                break;
-//
-//                case 5:
-//                    System.out.print("\nEnter the new product size :");
-//                    src.nextLine();
-//                    String modifySize = src.nextLine();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setSize(modifySize);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//                break;
-//
-//                case 6:
-//                    System.out.print("\nEnter the new product supplier :");
-//                    src.nextLine();
-//                    String modifySupplier = src.nextLine();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setSupplier(modifySupplier);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//                break;
-//
-//                case 7:
-//                    System.out.print("\nEnter the new product stock :");
-//                    src.nextLine();
-//                    int modifyStock = src.nextInt();
-//
-//                    System.out.print("\n\nConfirm to modify?");
-//                    ans=src.next().charAt(0);
-//                    if(Character.toUpperCase(ans)=='Y'){
-//                    productList.get(modify-1).setStock(modifyStock);
-//                    System.out.print("Successful modify!\n");
-//                    displayAllProd();
-//                    }
-//                    else{
-//                    System.out.print("\n\nModify cancel...");
-//                    }
-//                    temp=0;
-//                break;
-//
-//                default: System.out.println("Invalid input."); 
-//                temp=1;
-//
-//                }
-//            }
-//            
-//        }while(temp==1);
-//    }
-//    
+    public static void modifyProd(){
+        Scanner src=new Scanner(System.in);
+        ArrayList<Integer> foundIndexList = new ArrayList<>();
+
+        int temp=0;
+
+        do{
+            displayAllProd();
+            System.out.print("\n\nEnter the number that you want to modify :");
+            int modify=src.nextInt();
+            if(modify<=0 || modify>productList.size()){
+                System.out.print("Invalid message!\n\n");
+                temp=1;
+            }
+            else{
+                System.out.print("1.Product Code\n2.Prodcut Name\n3.Product Costs\n4.Product Price\n5.Product Size\n6.Product Supplier\n7.Product stock");
+                int option=Menu.getInput();
+                switch(option){
+                case 1:
+                    System.out.print("\nEnter the new product code :");
+                    src.nextLine();
+                    String modifyCode = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    char ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setProductCode(modifyCode);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+
+                break;
+
+                case 2:
+                    System.out.print("\nEnter the new product Name :");
+                    src.nextLine();
+                    String modifyName = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setProductName(modifyName);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+                break;
+
+                case 3:
+                    System.out.print("\nEnter the new product costs :");
+                    src.nextLine();
+                    double modifyCost = src.nextDouble();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setCosts(modifyCost);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+                break;
+
+                case 4:
+                    System.out.print("\nEnter the new product costs :");
+                    src.nextLine();
+                    double modifyPrice = src.nextDouble();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setCosts(modifyPrice);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+                break;
+
+                case 5:
+                    System.out.print("\nEnter the new product size :");
+                    src.nextLine();
+                    String modifySize = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setSize(modifySize);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+                break;
+
+                case 6:
+                    System.out.print("\nEnter the new product supplier :");
+                    src.nextLine();
+                    String modifySupplier = src.nextLine();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setSupplier(modifySupplier);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+                break;
+
+                case 7:
+                    System.out.print("\nEnter the new product stock :");
+                    src.nextLine();
+                    int modifyStock = src.nextInt();
+
+                    System.out.print("\n\nConfirm to modify?");
+                    ans=src.next().charAt(0);
+                    if(Character.toUpperCase(ans)=='Y'){
+                        productList.get(modify-1).setStock(modifyStock);
+                        System.out.print("Successful modify!\n");
+                        displayAllProd();
+                    }
+                    else{
+                        System.out.print("\n\nModify cancel...");
+                    }
+                    temp=0;
+                break;
+
+                default: System.out.println("Invalid input."); 
+                temp=1;
+                }
+            }
+        }while(temp==1);
+    }
+    
     public static void addStock(){
         Scanner src=new Scanner(System.in);
         int addStock=0;
