@@ -106,6 +106,24 @@ public abstract class Employee implements Salary{
         return null;
     }
     
+    public void manageMembership() {
+        int sel = 0;
+        do {
+            if (sel != -1) Menu.displayManagerMembershipMenu();
+            sel = Menu.getInput();
+            switch (sel) {
+                case 1:  Membership.displayMember(); POS.pause();break; // display all membership
+                case 2:  Membership.addMember(); POS.pause();break; // add membership
+                case 3:  Membership.modifyMember(); break; // modify membership
+                case 4:  Membership.removeMember(); POS.pause();break; // remove membership
+                case 5:  Membership.searchMember(); break; // search membership
+                case 6:  Membership.displayActivity(); POS.pause();break; // display activity of the day
+                case 0: return; //return to main menu
+                default: System.out.println("Invalid input."); sel = -1;
+            }
+        } while(sel != 0);
+    }
+    
     public static void addEmployee() { //Add Employee(Data come from Input from user)
         String empName;
         String empID;
@@ -162,7 +180,8 @@ public abstract class Employee implements Salary{
         do {
             i = Validation.vInt("\nPlease enter the No. to remove => ");
             if (i < 1 || i > empList.size()) System.out.println("Invalid Input.");
-        } while (i < 1 || i > empList.size());
+            else if (POS.userID.equalsIgnoreCase(empList.get(i-1).getEmpID())) System.out.println("You cannot Remove a user that is logged on.");
+        } while (i < 1 || i > empList.size() || POS.userID.equalsIgnoreCase(empList.get(i-1).getEmpID()));
         System.out.print("Are you sure? (Y to proceed or press other key to cancel) \n=>");
         if (Character.toUpperCase(POS.scan.next().charAt(0)) == 'Y') {
             System.out.printf("Successfuly removed %s(%s).", empList.get(i-1).getEmpName(), empList.get(i-1).empID);
@@ -171,6 +190,7 @@ public abstract class Employee implements Salary{
     }
     
     public static void removeEmployee(int i) { //Remove Employee(Remove the user with the passed-in INDEX i in the empList)
+        if(POS.userID.equalsIgnoreCase(empList.get(i-1).getEmpID())){ System.out.println("You cannot Remove a user that is logged on."); return;}
         System.out.print("Are you sure? (Y to proceed or press other key to cancel) \n=>");
         if (Character.toUpperCase(POS.scan.next().charAt(0)) == 'Y') {
             System.out.printf("Successfuly removed %s(%s).", empList.get(i).getEmpName(), empList.get(i).empID);
@@ -214,7 +234,7 @@ public abstract class Employee implements Salary{
         Employee selectedEmp = Employee.getEmpList().get(index); //Store the selected employee object
         do {
             if (sel != -1) {
-                System.out.println("Selected Employee:\n" + selectedEmp); //Print the selected employee's toString()
+                System.out.println("\nSelected Employee:\n" + selectedEmp); //Print the selected employee's toString()
                 Menu.displayManagerModifyUserMenu();
             }
             sel = Menu.getInput();
@@ -224,12 +244,13 @@ public abstract class Employee implements Salary{
                 case 1: // modify name
                     oldS = selectedEmp.getEmpName();
                     System.out.print("Enter new name : ");
-                    POS.scan.nextLine();
                     selectedEmp.setEmpName(POS.scan.nextLine());
                     System.out.printf("Successfully Modified Name (%s => %s)\n", oldS, selectedEmp.getEmpName());
+                    POS.pause();
                     break;
                 case 2: // modify EmpID
                     oldS = selectedEmp.getEmpID();
+                    if (oldS.equalsIgnoreCase(POS.userID)) {System.out.println("You cannot Modify Employee ID that is logged on.");POS.pause(); break;}
                     do {
                         System.out.print("Enter new employee ID : ");
                         newS = POS.scan.nextLine();
@@ -237,18 +258,21 @@ public abstract class Employee implements Salary{
                     selectedEmp.setEmpID(newS);
                     System.out.printf("Successfully Modified Employee ID (%s => %s)\n", oldS, selectedEmp.getEmpID());
                     selectedEmp.posCheck(selectedEmp.getEmpID());
+                    POS.pause();
                     break; 
                 case 3: // modify Year Joined
                     oldI = selectedEmp.getYearJoined();
                     selectedEmp.setYearJoined(Validation.vYearJoined("Enter new Year Joined : ")); //Input yearJoined with validation with custom print message
                     System.out.printf("Successfully Modified Year Joined (%d => %d)\n", oldI, selectedEmp.getYearJoined());
+                    POS.pause();
                     break;
                 case 4: // modify age
                     oldI = selectedEmp.getAge();
                     selectedEmp.setAge(Validation.vAge("Enter new Age : ")); //Input yearJoined with validation with custom print message
                     System.out.printf("Successfully Modified Age (%d => %d)\n", oldI, selectedEmp.getAge());
+                    POS.pause();
                     break;
-                case 5: Employee.removeEmployee(index); return; // delete user
+                case 5: Employee.removeEmployee(index); POS.pause();return; // delete user
                 case 0: return; //return to main menu
                 default: System.out.println("Invalid input."); sel = -1;
             }

@@ -107,8 +107,9 @@ public final class Menu {
         System.out.println("\nHere are the function that can perform by you:");
         System.out.println("1 => Accept Orders");
         System.out.println("2 => Display All Products");
-        System.out.println("3 => Display all Receipts");
-        System.out.println("4 => Change User");
+        System.out.println("3 => Display All Receipts");
+        System.out.println("4 => Manage Membership");
+        System.out.println("5 => Change User");
         System.out.println("0 => Quit");
     }
     

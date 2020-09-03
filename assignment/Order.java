@@ -38,7 +38,7 @@ public class Order {
         for(int j = 0; j < Membership.getMemList().size();j++){
             if(custName.equalsIgnoreCase(Membership.getMemList().get(j).getCustName())){
                 this.deliveryFees = 0;
-                if(Membership.getMemList().get(j).getLevel().equalsIgnoreCase("Sliver")){
+                if(Membership.getMemList().get(j).getLevel().equalsIgnoreCase("Silver")){
                     memberDis = (totSub * 0.05);
                 }else if(Membership.getMemList().get(j).getLevel().equalsIgnoreCase("gold")){
                     memberDis = (totSub *0.1);
@@ -50,13 +50,24 @@ public class Order {
     }
 
     public static void init() {
-        Product.addProduct("Sofas","S1001",350,600,"100*50*100","Mr. Lee",50);
-        Product.addProduct("Table","T1001",150,700,"100*100*100","Mr. Cheah",50);
-        Product.addProduct("Beds","B1001",150,800,"100*50*100","Mrs. Teh",50);
-        Product.addProduct("Ottoman","O1001",150,600,"10*10*10","Mr. Kee",50);
-        Product.addProduct("Dressers","D1001",150,800,"10*10*10","Mr. Tan",50);
-        Product.addProduct("Futons","F1001",150,700,"10*10*10","Mr. Soh",50);
-        Product.addProduct("Lockers","L1001",150,1000,"10*10*10","Mr. Thiow",50);
+        int stop = 2, xValue = -1, v=0;
+        for(int i = 0; i < 3; i++){
+            ArrayList<Product> prodOrdered = new ArrayList <Product>();
+            double total = 0;
+            stop++;
+            xValue++;
+            for(int x = 0; x < stop; x++){
+                prodOrdered.add(Product.getProductList().get(x));
+                prodOrdered.get(x).calculateSub(x+1);
+                total += prodOrdered.get(x).getSubtotal();
+            }
+            if(i == 0)
+            transaction.add(new Order("yan","pipi","0173391006","kepong","I001",total,prodOrdered,300,"03/05/2020"));
+            if(i == 1)
+            transaction.add(new Order("yan","coco","0123656699","Selayang","I002",total,prodOrdered,400,"03/05/2020"));
+            if(i == 2)
+            transaction.add(new Order("Ben","shing sheng","0125588639","Petaling jaya","I003",total,prodOrdered,500,"06/06/2020"));
+        }
     }
     
     public String getStaffName() {
@@ -208,28 +219,7 @@ public class Order {
         this.deliveryFees = deliveryFees;
     }
    
-    public static void runsample(){
-        int stop = 2, xValue = -1, v=0;
-        for(int i = 0; i < 3; i++){
-            ArrayList<Product> prodOrdered = new ArrayList <Product>();
-            double total = 0;
-            stop++;
-            xValue++;
-            for(int x = 0; x < stop; x++){
-                prodOrdered.add(Product.getProductList().get(x));
-                prodOrdered.get(x).calculateSub(x+1);
-                total += prodOrdered.get(x).getSubtotal();
-            }
-            if(i == 0)
-            transaction.add(new Order("yan","pipi","0173391006","kepong","I001",total,prodOrdered,300,"03/05/2020"));
-            if(i == 1)
-            transaction.add(new Order("yan","coco","0123656699","Selayang","I002",total,prodOrdered,400,"03/05/2020"));
-            if(i == 2)
-            transaction.add(new Order("Ben","shing sheng","0125588639","Petaling jaya","I003",total,prodOrdered,500,"06/06/2020"));
-        }
-    }
-    
-    
+
     
     public static void addOrder(){
       
@@ -247,9 +237,10 @@ public class Order {
         }
         
      do{
+          totSub = 0;
           int v = 0;
           ArrayList<Product> prodOrdered = new ArrayList <Product>();
-          staffName = POS.UserName;
+          staffName = POS.userName;
           orderIDnum[3]++;
           if(orderIDnum[3]==':'){
               orderIDnum[3]='0';
@@ -269,8 +260,6 @@ public class Order {
                 total = 0;
                 odrID = new String(orderIDnum);
 
-
-                
                 System.out.printf("\n\nPRODUCT LIST\n");
                 System.out.printf("------------\n");
                 for(int i = 0; i < Product.getProductList().size();i++ ){
@@ -278,15 +267,13 @@ public class Order {
                     System.out.printf("%d. %-15s |RM%5.2f\n",x,Product.getProductList().get(i).getProductName(),Product.getProductList().get(i).getPrice());
                 }
                 do{
-                    System.out.printf("\nEnter product No. => ");
-                    orderNo = scn.nextInt();
+                    orderNo = Validation.vInt("\nEnter product No. => ");
                     if(orderNo <= 0 || orderNo > Product.getProductList().size())
                         System.out.println("Select out of range !!!!");
                 }while(orderNo <= 0 || orderNo > Product.getProductList().size());
                 prodOrdered.add(Product.getProductList().get(orderNo - 1));
                 do{
-                    System.out.printf("Enter Quantity    => "); 
-                    qty = scn.nextInt();
+                    qty = Validation.vInt("Enter Quantity    => ");
                     if(qty > prodOrdered.get(v).getStock())
                         System.out.println("No enough stock !!!");
                 }while(qty <= 0 || qty > prodOrdered.get(v).getStock());
@@ -296,6 +283,7 @@ public class Order {
                 System.out.println("STAFF NAME : "+ staffName);
                 System.out.printf("No. \t ITEM CODE \t PRODUCT \t QUANTITY \t PRICE      \tSUBTOTAL \n");
                 System.out.printf("--------------------------------------------------------------------------------\n");
+                totSub = 0;
                 if(orderNo > 0){
                     for(int i = 0; i < prodOrdered.size();i++ ){
                         System.out.printf("%2d %15s %13s %13d  %14.2f  %16.2f\n",i+1, prodOrdered.get(i).getProductCode(),prodOrdered.get(i).getProductName(),prodOrdered.get(i).getQtyOrder(),prodOrdered.get(i).getPrice(),prodOrdered.get(i).getSubtotal());
@@ -339,7 +327,7 @@ public class Order {
             
             if((Character.toUpperCase(yes))  == 'Y'){
                 if(memberKey+1 > 0){
-                    System.out.printf("The the address is %s ?",Membership.getMemList().get(memberKey).getAddress());
+                    System.out.printf("The address is %s ?",Membership.getMemList().get(memberKey).getAddress());
                     do{
                         System.out.print("(Y/N)>");
                         yes = scn.next().charAt(0);
@@ -357,23 +345,22 @@ public class Order {
             
             System.out.println("\n\nPAYMENT METHOD\n==============\n1.Credit/Debit Card \n2.Cash\n");
             do{
-                System.out.printf("Payment method > ");
-                paymentMet = scn.nextInt();
+                paymentMet = Validation.vInt("Payment method > ");
+                if(paymentMet < 1 || paymentMet > 2) System.out.println("Invalid input.");
             }while(paymentMet < 1 || paymentMet > 2);
             if(paymentMet == 1){
                 
             }
             do{
-                System.out.printf("Deposit        > ");
-                deposit = scn.nextDouble();
+                deposit = Validation.vDouble("Deposit        > ");
             }while(deposit < 0);
-            if(deposit >= total){
+            if(deposit >= totSub){
                 System.out.println("\nFull Paid!!");
-                if(deposit > total){
+                if(deposit > totSub){
                    double change;
-                   change = deposit - total;
+                   change = deposit - totSub;
                    System.out.printf("Change to customer RM %5.2f" , change);
-                   deposit = total;
+                   deposit = totSub;
                 }
             }
             do{
@@ -400,7 +387,6 @@ public class Order {
     
     public static void addtrans(String staffName, String custName, String phoneNum, String location,String orderID, double total, ArrayList<Product> prodOrdered, double deposit, String dateStr){
         transaction.add(new Order(staffName,custName,phoneNum,location,orderID,total,prodOrdered, deposit,dateStr));
-        
     }
    
     
@@ -507,18 +493,20 @@ public class Order {
             if(mod==-1)
                 System.out.println("Invalid order ID ");
         }while(mod == -1);
-        System.out.println("Modify menu");
-        System.out.println("1.Staff name");
-        System.out.println("2.Customer Name");
-        System.out.println("3.Customer phone number");
-        System.out.println("4.location");
-        System.out.println("5.deposit");
-        System.out.println("6.Date");
-        System.out.println("7.Modify Product Ordered");
-        do{
-            System.out.printf("Enter your selection > ");
-            selection = scn.nextInt();
-        }while(selection < 0 || selection > 7);
+        
+        do {
+            if (select != -1) {
+            System.out.println("Modify menu");
+            System.out.println("1.Staff name");
+            System.out.println("2.Customer Name");
+            System.out.println("3.Customer phone number");
+            System.out.println("4.location");
+            System.out.println("5.deposit");
+            System.out.println("6.Date");
+            System.out.println("7.Modify Product Ordered");
+            System.out.println("0.Return to main menu");
+            }
+        selection = Validation.vInt("Enter your selection > ");
         switch(selection){
             case 1:
                 scn.nextLine(); 
@@ -554,7 +542,7 @@ public class Order {
                 scn.nextLine(); 
                 System.out.print("Enter a new location >");
                 modifyOdr.location = scn.nextLine();
-            break;
+                break;
             case 5:
                 scn.nextLine(); 
               do{
@@ -567,19 +555,19 @@ public class Order {
             break;
              case 6:
                 int error;
-
-                scn.nextLine();
                 do{
-                    do{
+                    try {
                         System.out.print("Enter a new Date (dd/mm/yyyy)(/)is required > ");
                         modifyOdr.dateStr = scn.nextLine();
                         int day = Integer.parseInt(modifyOdr.dateStr.substring(0,2));
                         int month = Integer.parseInt(modifyOdr.dateStr.substring(3,5));
                         int year = Integer.parseInt(modifyOdr.dateStr.substring(6));
                         error = dateValidation(day,month,year);
-                        if(modifyOdr.dateStr.length() != 10) System.out.println("Follow the format (DD/MM/YYYY)");
-                    }while(modifyOdr.dateStr.length() != 10);
-                }while(error != 1);      
+                    } catch (Exception e) {
+                        error = 0;
+                    }
+                    if (modifyOdr.dateStr.length() != 10 || error != 1) System.out.println("Follow the format (DD/MM/YYYY)");
+                }while(modifyOdr.dateStr.length() != 10 || error != 1);
             break;
             case 7:
                 modifyOdr.total=0;
@@ -595,7 +583,9 @@ public class Order {
                 System.out.println("1.Add product ");
                 System.out.println("2.Modify product quantity");
                 System.out.println("3.Remove a product");
-                select = scn.nextInt();
+                System.out.println("0.Return to main menu");
+                do {
+                select = Validation.vInt(">> ");
                 
                 switch(select){
                     case 1: 
@@ -607,28 +597,24 @@ public class Order {
                              System.out.printf("%d. %-15s |RM%5.2f\n",x,Product.getProductList().get(v).getProductName(),Product.getProductList().get(v).getPrice());
                         }
                         do{
-                            System.out.printf("\n\nEnter product No. => ");
-                            orderNo = scn.nextInt();
+                            orderNo = Validation.vInt("\n\nEnter product No. => ");
                             if(orderNo <= 0 || orderNo > Product.getProductList().size())
                                 System.out.println("Invalid product No. !!!");
                         }while(orderNo <= 0 || orderNo > Product.getProductList().size());
                         do{
-                            System.out.printf("Enter Quantity => "); 
-                             qty = scn.nextInt();
+                             qty = Validation.vInt("Enter Quantity => ");
                              if(qty > Product.getProductList().get(orderNo - 1).getStock())
                                  System.out.println("No enough stock !!!!");
                          }while(qty <= 0 || qty > Product.getProductList().get(orderNo - 1).getStock());
                         break;
                     case 2:
                         do{
-                            System.out.printf("\n\nEnter No. to change the quantity => ");
-                            num = scn.nextInt();
+                            num = Validation.vInt("\n\nEnter No. to change the quantity => ");
                         }while(num <=0 || num > transaction.get(mod).getProdOrdered().size()); 
 
                         System.out.printf("\n\n%2d %15s %13s %13d  %14.2f  %16.2f\n\n",num,  transaction.get(mod).getProdOrdered().get(num-1).getProductCode(), transaction.get(mod).getProdOrdered().get(num-1).getProductName(), transaction.get(mod).getProdOrdered().get(num-1).getQtyOrder(), transaction.get(mod).getProdOrdered().get(num-1).getPrice(), transaction.get(mod).getProdOrdered().get(num-1).getSubtotal());
                         do{
-                            System.out.printf("Enter a new quantity > ");
-                            qty = scn.nextInt();
+                            qty = Validation.vInt("Enter a new quantity > ");
                         if(qty > Product.getProductList().get(num - 1).getStock())
                                 System.out.println("No enough stock !!!!");
                         }while(qty <= 0 || qty > Product.getProductList().get(num - 1).getStock());
@@ -636,19 +622,24 @@ public class Order {
                         break;
                     case 3:
                         do{
-                            System.out.printf("\n\nEnter No. to remove the product ordered => ");
-                            num = scn.nextInt();
+                            num = Validation.vInt("\n\nEnter No. to remove the product ordered => ");
                         }while(num <= 0 || num > transaction.get(mod).getProdOrdered().size());
-                }
-            break;
+                        break;
+                    case 0: break;
+                    default: select = -1; System.out.println("Invalid input."); break;
+                    }
+                } while(select == -1);
+                break;
+            case 0: return;
+            default: select = -1; System.out.println("Invalid input."); break;
         }
+        
         do{
             System.out.print("Confirm to modify (y = yes) >");
             yes = scn.next().charAt(0);
             scn.nextLine();
         }while(!((Character.toUpperCase(yes))  == 'Y' || (Character.toUpperCase(yes))  == 'N'));
 
-        
         if((Character.toUpperCase(yes))  == 'Y'){
             switch(selection){
             case 1:
@@ -692,6 +683,7 @@ public class Order {
             System.out.println("\nSuccessfully Modify !!");
             displayReceipt(mod);
         }
+        }while(selection != 0);
     }
     
     public static int dateValidation(int day, int month, int year){
@@ -728,175 +720,172 @@ public class Order {
             System.out.println("\nThere is no Order to search!");
             return;
         }
-        int select, record = 0;
+        int select = 0, record = 0;
         Order searchOrd = new Order();
         Scanner scn = new Scanner(System.in);
-        System.out.println("\n\nSearch menu");
-        System.out.println("1.Staff name");
-        System.out.println("2.Customer Name");
-        System.out.println("3.Customer phone number");
-        System.out.println("4.location");
-        System.out.println("5.Order ID");
-        System.out.println("6.total ");
-        System.out.println("7.deposit");
-        System.out.println("8.Date");
-        System.out.println("9.Balance");
-        System.out.printf("Enter your selection > ");
-        select = scn.nextInt();
-        int i,x;
-        switch(select){
-            
-            case 1: 
-                i = 0;
-                scn.nextLine(); 
-                System.out.print("Enter a staff name >");
-                searchOrd.staffName = scn.nextLine();
-                for(Order o: transaction){
-                    if(o.staffName.equalsIgnoreCase(searchOrd.staffName)){
-                        displayReceipt(i);
-                        record++;
+        do {
+            record = 0;
+            if (select != -1) {
+                System.out.println("\n\nSearch menu");
+                System.out.println("1.Staff name");
+                System.out.println("2.Customer Name");
+                System.out.println("3.Customer phone number");
+                System.out.println("4.location");
+                System.out.println("5.Order ID");
+                System.out.println("6.total ");
+                System.out.println("7.deposit");
+                System.out.println("8.Date");
+                System.out.println("9.Balance");
+                System.out.println("0.Return to main menu");
+            }
+            select = Validation.vInt("Enter your selection > ");
+            int i;
+            switch(select){
+                case 1: 
+                    i = 0;
+                    System.out.print("Enter a staff name >");
+                    searchOrd.staffName = scn.nextLine();
+                    for(Order o: transaction){
+                        if(o.staffName.equalsIgnoreCase(searchOrd.staffName)){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
                     }
-                    i++;
-                }
-            break;
-            
-            case 2:
-                i = 0;
-                scn.nextLine(); 
-                System.out.print("Enter a customer name >");
-                searchOrd.custName= scn.nextLine();
-                for(Order o: transaction){
-                    if(o.custName.equalsIgnoreCase(searchOrd.custName)){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
-            break;
-            
-            case 3:
-                i = 0;
-                scn.nextLine(); 
-                do{
-                    System.out.print("Enter a customer phone number >");
-                    searchOrd.phoneNum= scn.nextLine();
-                }while(!(searchOrd.phoneNum.length()==10 || searchOrd.phoneNum.length()== 11 ));
-
-                for(Order o: transaction){
-                    if(o.phoneNum.equalsIgnoreCase(searchOrd.phoneNum)){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
-            break;
-           
-            case 4:
-                i = 0;
-                scn.nextLine(); 
-                System.out.print("Enter a customer location>");
-                searchOrd.location= scn.nextLine();
-                for(Order o: transaction){
-                    if(o.location.equalsIgnoreCase(searchOrd.location)){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
-            break;
-            
-            case 5:
-                i = 0;
-                scn.nextLine(); 
-                System.out.print("Enter an order ID>");
-                searchOrd.orderID= scn.nextLine();
-                for(Order o: transaction){
-                    if(o.orderID.equalsIgnoreCase(searchOrd.orderID)){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
-            break;
-            
-            
-            case 6:
-                i = 0;
-                scn.nextLine(); 
-                do{
-                    System.out.print("Enter a total >");
-                    searchOrd.total= scn.nextDouble();
-                }while(searchOrd.total < 0);
-                for(Order o: transaction){
-                    if(o.total == searchOrd.total){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
-            break;
-            
-            case 7:
-                i = 0;
-                scn.nextLine(); 
-                do{
-                    System.out.print("Enter deposit >");
-                    searchOrd.deposit= scn.nextDouble();
-                }while(searchOrd.deposit < 0);
-                for(Order o: transaction){
-                    if(o.deposit == searchOrd.deposit){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
-            break;
-            case 8:
-                int error;
-                i = 0;
-                scn.nextLine(); 
-                do{
-                    do{
-                        System.out.print("Enter a Date (dd/mm/yyyy)(/)is required > ");
-                        searchOrd.dateStr = scn.nextLine();
-                        int day = Integer.parseInt(searchOrd.dateStr.substring(0,2));
-                        int month = Integer.parseInt(searchOrd.dateStr.substring(3,5));
-                        int year = Integer.parseInt(searchOrd.dateStr.substring(6));
-                        error = dateValidation(day,month,year);
-                        if(searchOrd.dateStr.length() != 10) System.out.println("Follow the format (DD/MM/YYYY)");
-                    }while(searchOrd.dateStr.length() != 10);
-                }while(error != 1);
-                for(Order o: transaction){
-                    if(o.dateStr.equalsIgnoreCase(searchOrd.dateStr)){
-                        displayReceipt(i);
-                        record++;
-                    }
-                    i++;
-                }
                 break;
-            case 9:
-                i = 0;
-                scn.nextLine(); 
-                do{
-                    System.out.print("Enter balance >");
-                    searchOrd.balance= scn.nextDouble();
-                }while(searchOrd.balance < 0);
 
-                for(Order o: transaction){
-                    if(o.balance == searchOrd.balance){
-                        displayReceipt(i);
-                        record++;
+                case 2:
+                    i = 0;
+                    System.out.print("Enter a customer name >");
+                    searchOrd.custName= scn.nextLine();
+                    for(Order o: transaction){
+                        if(o.custName.equalsIgnoreCase(searchOrd.custName)){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
                     }
-                    i++;
-                }
-            break;
-        }
-        if(record == 0){
+                break;
+
+                case 3:
+                    i = 0;
+                    do{
+                        System.out.print("Enter a customer phone number >");
+                        searchOrd.phoneNum= scn.nextLine();
+                    }while(!(searchOrd.phoneNum.length()==10 || searchOrd.phoneNum.length()== 11 ));
+
+                    for(Order o: transaction){
+                        if(o.phoneNum.equalsIgnoreCase(searchOrd.phoneNum)){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                break;
+
+                case 4:
+                    i = 0;
+                    System.out.print("Enter a customer location>");
+                    searchOrd.location= scn.nextLine();
+                    for(Order o: transaction){
+                        if(o.location.equalsIgnoreCase(searchOrd.location)){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                break;
+
+                case 5:
+                    i = 0;
+                    System.out.print("Enter an order ID>");
+                    searchOrd.orderID= scn.nextLine();
+                    for(Order o: transaction){
+                        if(o.orderID.equalsIgnoreCase(searchOrd.orderID)){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                break;
+
+
+                case 6:
+                    i = 0;
+                    do{
+                        searchOrd.total= Validation.vDouble("Enter a total >");
+                    }while(searchOrd.total < 0);
+                    for(Order o: transaction){
+                        if(o.total == searchOrd.total){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                break;
+
+                case 7:
+                    i = 0;
+                    do{
+                        searchOrd.deposit= Validation.vDouble("Enter deposit >");
+                    }while(searchOrd.deposit < 0);
+                    for(Order o: transaction){
+                        if(o.deposit == searchOrd.deposit){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                break;
+                case 8:
+                    int error;
+                    i = 0;
+                    do{
+                        try {
+                            System.out.print("Enter a Date (dd/mm/yyyy)(/)is required > ");
+                            searchOrd.dateStr = scn.nextLine();
+                            int day = Integer.parseInt(searchOrd.dateStr.substring(0,2));
+                            int month = Integer.parseInt(searchOrd.dateStr.substring(3,5));
+                            int year = Integer.parseInt(searchOrd.dateStr.substring(6));
+                            error = dateValidation(day,month,year);
+                        } catch (Exception e) {
+                            error = 0;
+                        }
+                        if(searchOrd.dateStr.length() != 10 || error != 1) System.out.println("Invalid input. Follow the format (DD/MM/YYYY)");
+                    }while(searchOrd.dateStr.length() != 10 || error != 1);
+                    for(Order o: transaction){
+                        if(o.dateStr.equalsIgnoreCase(searchOrd.dateStr)){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                    break;
+                case 9:
+                    i = 0;
+                    do{
+                        searchOrd.balance= Validation.vDouble("Enter balance >");
+                    }while(searchOrd.balance < 0);
+
+                    for(Order o: transaction){
+                        if(o.balance == searchOrd.balance){
+                            displayReceipt(i);
+                            record++;
+                        }
+                        i++;
+                    }
+                    break;
+                case 0: return;
+                default: select = -1;System.out.println("Invalid input.");break;
+            }
+            if(record == 0){
             System.out.printf("\n\n 0 record found \n");
-        }
-        else{
-            System.out.printf(" %d record found \n", record);
-        }
+            }
+            else{
+                System.out.printf(" %d record found \n", record);
+            }
+        }while(select != 0);
+        
     }
     
     public static void orderSummary(){
@@ -904,49 +893,53 @@ public class Order {
         Order sum = new Order(); 
         int select , month, year, day;
 //        String dateSum;
-        System.out.printf("SUMMARY MENU\n");
-        System.out.printf("============\n");
-        System.out.printf("1.Daily Summary\n");
-        System.out.printf("2.Monthly Summary\n");
-        System.out.printf("3.Year Summary\n");
-        System.out.printf("4.All Orders Summary\n");
-        System.out.printf("\nEnter your selection > ");
-        select = scn.nextInt();
-        switch(select){
-            case 1:
-                int error;
-                scn.nextLine();
-                 do{
+        
+        do {    
+            System.out.printf("SUMMARY MENU\n");
+            System.out.printf("============\n");
+            System.out.printf("1.Daily Summary\n");
+            System.out.printf("2.Monthly Summary\n");
+            System.out.printf("3.Year Summary\n");
+            System.out.printf("4.All Orders Summary\n");
+            System.out.printf("0.Return to main menu\n");
+            select = Validation.vInt("\nEnter your selection > ");
+            switch(select){
+                case 1:
+                    int error = 1;
                     do{
-                        System.out.print("Enter a Date (dd/mm/yyyy)(/)is required > ");
-                        sum.dateStr = scn.nextLine();
-                        day = Integer.parseInt(sum.dateStr.substring(0,2));
-                        month = Integer.parseInt(sum.dateStr.substring(3,5));
-                        year = Integer.parseInt(sum.dateStr.substring(6));
-                        error = dateValidation(day,month,year);
-                        if(sum.dateStr.length() != 10) System.out.println("Follow the format (DD/MM/YYYY)");
-                    }while(sum.dateStr.length() != 10);
-                }while(error != 1);
-                displaySuammary(sum.dateStr);
-            break;
+                        try {
+                            System.out.print("Enter a Date (dd/mm/yyyy)(/)is required > ");
+                            sum.dateStr = scn.nextLine();
+                            day = Integer.parseInt(sum.dateStr.substring(0,2));
+                            month = Integer.parseInt(sum.dateStr.substring(3,5));
+                            year = Integer.parseInt(sum.dateStr.substring(6));
+                            error = dateValidation(day,month,year);
+                        } catch (Exception e) {
+                            //System.out.println("Invalid Input. Follow the format (DD/MM/YYYY)");
+                            error = 0;
+                        }
+                        if (error != 1) System.out.println("Invalid Input. Follow the format (DD/MM/YYYY)");
+                    }while(sum.dateStr.length() != 10 || error != 1);
+                    displaySuammary(sum.dateStr);
+                break;
 
-            case 2:
-                System.out.print("Enter month > ");
-                month = scn.nextInt();
-                System.out.print("Enter year  > ");
-                year =  scn.nextInt();
-                displaySuammary(month, year);
-                break;
-            case 3:
-                System.out.print("Enter year  > ");
-                year =  scn.nextInt();
-                displaySuammary(0, year);   
-                break;
-            case 4:
-                System.out.println("Showing all orders summary...");
-                displaySummary();
-                break;
-        }
+                case 2:
+                    month = Validation.vInt("Enter month > ");
+                    year =  Validation.vInt("Enter year  > ");
+                    displaySuammary(month, year);
+                    break;
+                case 3:
+                    year =  Validation.vInt("Enter year  > ");
+                    displaySuammary(0, year);   
+                    break;
+                case 4:
+                    System.out.println("Showing all orders summary...");
+                    displaySummary();
+                    break;
+                case 0: return;
+                default: System.out.println("Invalid input."); select = -1;
+            }
+        }while(select != 0);
     }
 
     public static void displaySummary(){
@@ -997,7 +990,7 @@ public class Order {
         System.out.printf("-----------------------------------------------------------------------\n");
         for(Order o: transaction){
             if(month!=0)
-            chkMonth = Integer.parseInt(o.dateStr.substring(3, 5));
+                chkMonth = Integer.parseInt(o.dateStr.substring(3, 5));
             chkyear = Integer.parseInt(o.dateStr.substring(6));
             if(chkyear == year){
                 if(chkMonth == month){

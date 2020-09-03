@@ -8,7 +8,8 @@ import java.util.Scanner;
 public class POS {
     static Scanner scan = new Scanner(System.in);
     static char cont;
-    static String UserName;
+    static Employee loggedUser;
+    static String userName, userID;
     public static Employee login() {
         String loginID;
         String loginPass;
@@ -62,15 +63,16 @@ public class POS {
         else if(employee.getEmpID().charAt(0) == 'M') {
             System.out.println("Login successfully, you are a manager.");
             Manager manager = new Manager(employee);
-            UserName = manager.getEmpName();
+            userName = manager.getEmpName();
+            userID = manager.getEmpID();
             manager.dMenu();
         }
         else if (employee.getEmpID().charAt(0) == 'S') {
             System.out.println("Login successfully, you are a staff.");
             Staff staff = new Staff(employee);
-            UserName = staff.getEmpName();
+            userName = staff.getEmpName();
+            userID = staff.getEmpID();
             staff.dMenu();
-            //Menu menu = new Menu();
         }
     }
     public static void pause(){ 

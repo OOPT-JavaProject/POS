@@ -33,6 +33,22 @@ public class Validation {
         }
     }
     
+    public static double vDouble(String msg) {
+        double doubleIn;
+        while(true) {
+            System.out.print(msg);
+            if (POS.scan.hasNextDouble()) {
+                doubleIn = POS.scan.nextDouble();
+                POS.scan.nextLine();
+                return doubleIn;
+            }
+            else {
+                System.out.println("Invalid input.");
+                POS.scan.nextLine();
+            }
+        }
+    }
+    
     public static boolean vEmpID(String empID) { //validate Employee ID
         if (Character.toUpperCase(empID.charAt(0)) == 'M' || Character.toUpperCase(empID.charAt(0)) == 'S') {
             return true;

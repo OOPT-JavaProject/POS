@@ -171,7 +171,7 @@ public class Product {
     //------------------------------------------------PRODUCT CODE-&-VALIDATION-----------------------------------------------------------   
      String prodCode;   //validation for productCode must contain 1 alphabet and 4number
     do{
-       System.out.print("\nEnter the product code :");
+       System.out.print("\nEnter the product code(e.g. A1001) :");
        prodCode=src.nextLine();
        if(prodCode.length()== 5){  //first check the length must be 5 only 1(A) 4(D)
             if(Character.isLetter(prodCode.charAt(0))){ //second check is for 1 code must be letter
@@ -233,7 +233,7 @@ public class Product {
        src.nextLine();
        String prodSize;
        do{
-            System.out.print("\nEnter the product size :");
+            System.out.print("\nEnter the product size(e.g. 100*50*35) :");
             prodSize=src.nextLine();
 
                 if(!prodSize.matches("-?\\d+\\*-?\\d+\\*-?\\d+")){
@@ -343,8 +343,7 @@ public class Product {
             break;
             
             case 3:
-                System.out.print("\nEnter the product costs :");
-                double searchCost = src.nextDouble();
+                double searchCost = Validation.vDouble("\nEnter the product costs :");
                 for(Product p:productList){
             
                     if(p.costs == searchCost){
@@ -357,8 +356,7 @@ public class Product {
             break;
                 
              case 4:
-                System.out.print("\nEnter the product price :");
-                double searchPrice = src.nextDouble();
+                double searchPrice = Validation.vDouble("\nEnter the product price :");
                 for(Product p:productList){
             
                     if(p.price == searchPrice){
@@ -372,9 +370,19 @@ public class Product {
                 
                 
             case 5:
-                
-                System.out.print("\nEnter the product size :");
-                String searchSize = src.nextLine();
+                String searchSize;
+                do{
+                    System.out.print("\nEnter the product size(e.g. 100*50*35) :");
+                    searchSize=src.nextLine();
+
+                    if(!searchSize.matches("-?\\d+\\*-?\\d+\\*-?\\d+")){
+                        System.out.print("-------Cannot include alphabet and Must follow N*N*N.-------");
+                        temp=1;
+                    }
+                    else{
+                        temp=0;
+                    }
+                }while(temp==1);
                 for(Product p:productList){
             
                     if(p.size.equalsIgnoreCase(searchSize)){
@@ -402,9 +410,7 @@ public class Product {
             break;
             
             case 7:
-                
-                System.out.print("\nEnter the product stock :");
-                int searchStock = src.nextInt();
+                int searchStock = Validation.vInt("\nEnter the product stock :");
                 for(Product p:productList){
             
                     if(p.stock == searchStock){
@@ -454,8 +460,7 @@ public class Product {
         ArrayList<Integer> foundIndexList = new ArrayList<>();
         
         displayAllProd();
-        System.out.print("Enter the number that you want to remove :");
-        int delete=src.nextInt();
+        int delete=Validation.vInt("Enter the number that you want to remove :");
         System.out.printf("Successfuly removed %s | %s | %.2f | %.2f | %s | %s | %d |",productList.get(delete-1).productName,productList.get(delete-1).productCode,
         productList.get(delete-1).costs,productList.get(delete-1).price,productList.get(delete-1).size,productList.get(delete-1).supplier,productList.get(delete-1).stock);
         productList.remove(delete-1);
@@ -471,7 +476,7 @@ public class Product {
         do{
             displayAllProd();
             System.out.print("\n\nEnter the number that you want to modify :");
-            int modify=src.nextInt();
+            int modify=Menu.getInput();
             if(modify<=0 || modify>productList.size()){
                 System.out.print("Invalid message!\n\n");
                 temp=1;
@@ -479,13 +484,38 @@ public class Product {
             else{
                 System.out.print("1.Product Code\n2.Prodcut Name\n3.Product Costs\n4.Product Price\n5.Product Size\n6.Product Supplier\n7.Product stock");
                 int option=Menu.getInput();
+                String modifyCode;
                 switch(option){
                 case 1:
-                    System.out.print("\nEnter the new product code :");
-                    src.nextLine();
-                    String modifyCode = src.nextLine();
+                    do {
+                        System.out.print("\nEnter the new product code :");
+                        modifyCode = src.nextLine();
 
-                    System.out.print("\n\nConfirm to modify?");
+                        if(modifyCode.length()== 5){  //first check the length must be 5 only 1(A) 4(D)
+                            if(Character.isLetter(modifyCode.charAt(0))){ //second check is for 1 code must be letter
+                                for(int i=1;i<modifyCode.length();i++){
+                                    if(Character.isDigit(modifyCode.charAt(i))){ //third check 2 -5 must be number
+                                        temp=0;
+                                    }
+                                    else{
+                                        System.out.print("---------------Invalid Input!---------------");
+                                        temp=1;//user input again
+                                        break;
+                                    }   
+                               }
+                            }
+                            else{
+                                System.out.print("---------------Invalid Input!---------------");
+                                temp=1;//user input again
+                            }
+                        }
+                        else{
+                           System.out.print("---------------Invalid Input!---------------");
+                           temp=1;//user input again
+                        }
+                    }while (temp == 1);
+                    
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     char ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
                         productList.get(modify-1).setProductCode(modifyCode);
@@ -504,7 +534,7 @@ public class Product {
                     src.nextLine();
                     String modifyName = src.nextLine();
 
-                    System.out.print("\n\nConfirm to modify?");
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
                         productList.get(modify-1).setProductName(modifyName);
@@ -518,11 +548,9 @@ public class Product {
                 break;
 
                 case 3:
-                    System.out.print("\nEnter the new product costs :");
-                    src.nextLine();
-                    double modifyCost = src.nextDouble();
+                    double modifyCost = Validation.vDouble("\nEnter the new product costs :");
 
-                    System.out.print("\n\nConfirm to modify?");
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
                         productList.get(modify-1).setCosts(modifyCost);
@@ -536,14 +564,12 @@ public class Product {
                 break;
 
                 case 4:
-                    System.out.print("\nEnter the new product costs :");
-                    src.nextLine();
-                    double modifyPrice = src.nextDouble();
+                    double modifyPrice = Validation.vDouble("\nEnter the new product price :");
 
-                    System.out.print("\n\nConfirm to modify?");
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
-                        productList.get(modify-1).setCosts(modifyPrice);
+                        productList.get(modify-1).setPrice(modifyPrice);
                         System.out.print("Successful modify!\n");
                         displayAllProd();
                     }
@@ -554,11 +580,21 @@ public class Product {
                 break;
 
                 case 5:
-                    System.out.print("\nEnter the new product size :");
-                    src.nextLine();
-                    String modifySize = src.nextLine();
-
-                    System.out.print("\n\nConfirm to modify?");
+                    String modifySize;
+                    do {
+                        System.out.print("\nEnter the new product size :");
+                        modifySize = src.nextLine();
+                        if(!modifySize.matches("-?\\d+\\*-?\\d+\\*-?\\d+")){
+                            System.out.print("-------Cannot include alphabet and Must follow N*N*N.-------");
+                            temp=1;
+                        }
+                        else{
+                            temp=0;
+                        }
+                    }while ( temp == 1);
+                    
+                    
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
                         productList.get(modify-1).setSize(modifySize);
@@ -573,10 +609,9 @@ public class Product {
 
                 case 6:
                     System.out.print("\nEnter the new product supplier :");
-                    src.nextLine();
                     String modifySupplier = src.nextLine();
 
-                    System.out.print("\n\nConfirm to modify?");
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
                         productList.get(modify-1).setSupplier(modifySupplier);
@@ -590,11 +625,9 @@ public class Product {
                 break;
 
                 case 7:
-                    System.out.print("\nEnter the new product stock :");
-                    src.nextLine();
-                    int modifyStock = src.nextInt();
+                    int modifyStock = Validation.vInt("\nEnter the new product stock :");
 
-                    System.out.print("\n\nConfirm to modify?");
+                    System.out.print("\n\nConfirm to modify? (Y=yes) ");
                     ans=src.next().charAt(0);
                     if(Character.toUpperCase(ans)=='Y'){
                         productList.get(modify-1).setStock(modifyStock);
@@ -622,16 +655,17 @@ public class Product {
         ArrayList<Integer> foundIndexList = new ArrayList<>();
         
         displayAllProd();
+        System.out.println("[ 0] Return to main menu");
         do{
-            System.out.print("\n\nEnter the number that you want to add product :");
-            int addProduct=src.nextInt();
-            if(addProduct<=0 || addProduct>productList.size()){ //cannot be negative and out of range of the arraylist
+            int addProduct=Validation.vInt("\n\nEnter the number that you want to add stock :");
+            if(addProduct<0 || addProduct>productList.size()){ //cannot be negative and out of range of the arraylist
                 System.out.print("Invalid message!\n\n");
                 temp=1;
             }
+            else if(addProduct == 0) return;
             else{
                 do{
-                        System.out.print("\nEnter the quantity : ");
+                    System.out.print("\nEnter the quantity : ");
                     try{
                         addStock=src.nextInt();
                         if(addStock<=0){

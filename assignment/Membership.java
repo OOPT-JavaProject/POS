@@ -84,6 +84,7 @@ public class Membership {
         int valiName=1;
         System.out.println("Adding new customer details as a member: ");
         do{
+            valiName=1;
             System.out.print("Customer name: ");
             custName=POS.scan.nextLine();
             for(Membership m:membershipList){
@@ -259,6 +260,7 @@ public class Membership {
             if (remove< 1 || remove > membershipList.size()) System.out.println("Invalid input. Please enter again.");
             else selectedIndex=remove-1;
         } while (remove < 1 || remove > membershipList.size());
+        do {
         System.out.print("Are you sure about removing this membership? (Y/y:yes || N/n:no)> ");
         removeYorN=POS.scan.next().charAt(0);
         if(Character.toUpperCase(removeYorN)=='Y'){
@@ -266,18 +268,23 @@ public class Membership {
             membershipList.remove(selectedIndex);
             removeMemberCount++;
         }
-        else
+        else if (Character.toUpperCase(removeYorN)=='N')
             System.out.println("Remove process cancelled.");
+        }while(Character.toUpperCase(removeYorN)!='Y' && Character.toUpperCase(removeYorN)!='N');
     }
     public static void removeMember(int index){
         char removeYorN;
+        do {
         System.out.print("Are you sure about removing this membership? (Y/y:yes || N/n:no)> ");
         removeYorN=POS.scan.next().charAt(0);
         if(Character.toUpperCase(removeYorN)=='Y'){
             System.out.printf("Removed successfully!! %s is no longer a member.",membershipList.get(index).custName);
             membershipList.remove(index);
             removeMemberCount++;
-        } 
+        }
+        else if (Character.toUpperCase(removeYorN)=='N')
+            System.out.println("Remove process cancelled.");
+        }while(Character.toUpperCase(removeYorN)!='Y' && Character.toUpperCase(removeYorN)!='N');
     }
     
     public static void searchMember(){
@@ -287,24 +294,14 @@ public class Membership {
             ArrayList<Integer> searchedList=new ArrayList<>();
             System.out.println("\n\n\nHere are the fields that can be searched: ");
             System.out.println("1. Customer name. \n2. Membership ID.\n3. Category.\n0. Back to menu.");
-            do{  
-                validAc=1;
-                System.out.print("Please select one: ");
-                if(POS.scan.hasNextInt()){
-                    search=POS.scan.nextInt();
-                    POS.scan.nextLine();
-                    if(search<0||search>3)validAc=0;
-                }
-                else
-                    validAc=0;
-            }while(validAc==0);
+            search=Validation.vInt("Please select one: ");
             switch(search){
                 case 1:
                         searchedList.clear();
                         System.out.print("Enter customer's name: ");
                         cName=POS.scan.nextLine();
                         for(Membership m:membershipList){
-                            if(cName.equals(m.custName)){
+                            if(cName.equalsIgnoreCase(m.custName)){
                                 searchedList.add(membershipList.indexOf(m));
                             }
                         }
@@ -318,7 +315,7 @@ public class Membership {
                         cID=POS.scan.nextLine();
                     }while(cID.length()!=6||cID.charAt(0)!='M'||cID.charAt(1)!='S');
                     for(Membership m:membershipList){
-                        if(cID.equals(m.membershipID))
+                        if(cID.equalsIgnoreCase(m.membershipID))
                             searchedList.add(membershipList.indexOf(m));
                     }
                     displayMember(searchedList);
@@ -327,12 +324,10 @@ public class Membership {
                 case 3: 
                     searchedList.clear();
                     do {
-                        System.out.println("Select one category to search: ");
-                        System.out.print("\n1. Silver\n2. Gold\nChoose 1 or 2: ");
-                        searchCat = POS.scan.nextInt();
-                        if (searchCat < 1 && searchCat > 2) 
+                        searchCat = Validation.vInt("Select one category to search: \n1. Silver\n2. Gold\nChoose 1 or 2: ");
+                        if (searchCat < 1 || searchCat > 2) 
                             System.out.println("Invalid Input.");
-                    } while(searchCat < 1 && searchCat > 2);
+                    } while(searchCat < 1 || searchCat > 2);
                     if(searchCat==1)
                         cat="SILVER";
                     else

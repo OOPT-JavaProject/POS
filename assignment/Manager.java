@@ -12,7 +12,6 @@ import java.util.Scanner;
  * @author Z
  */
 public class Manager extends Employee{
-    private Scanner scan = new Scanner(System.in);
     public Manager(Employee emp) {
         super(emp.getEmpName(), emp.getEmpID(), emp.getEmpPassword(), emp.getYearJoined(), emp.getAge());
     }
@@ -64,15 +63,15 @@ public class Manager extends Employee{
             sel = Menu.getInput();
             switch (sel) {
                 case 1: Order.addOrder(); break; // Accept Orders
-                case 2: Order.displayReceipt(); break; // Display All Orders
-                case 3: Order.modifyOrder(); break; // Modify Order
+                case 2: Order.displayReceipt(); POS.pause();break; // Display All Orders
+                case 3: Order.modifyOrder(); POS.pause();break; // Modify Order
                 case 4: Order.searchOrder(); break; // Search Order
                 case 5: Order.orderSummary(); break; // Order Summary
-                case 6: Order.removeOrder(); break; // Remove order
+                case 6: Order.removeOrder(); POS.pause();break; // Remove order
                 case 0: return; //return to main menu
                 default: System.out.println("Invalid input."); sel = -1;
             }
-            POS.pause();
+            
         } while(sel != 0);
     }
     public void manageProduct() {
@@ -81,16 +80,15 @@ public class Manager extends Employee{
             if (sel != -1) Menu.displayManagerProductMenu();
             sel = Menu.getInput();
             switch (sel) {
-                case 1:  Product.displayAllProd(); break; //Display All Products
-                case 2:  Product.addProduct(); break; //Add Product
+                case 1:  Product.displayAllProd(); POS.pause();break; //Display All Products
+                case 2:  Product.addProduct(); POS.pause();break; //Add Product
                 case 3:  Product.modifyProd(); break; //Modify Product
-                case 4:  Product.removeProd(); break; //Remove Product
+                case 4:  Product.removeProd(); POS.pause();break; //Remove Product
                 case 5:  Product.searchProduct(); break; //Search Product
                 case 6:  Product.addStock(); break; //Add products' stock
                 case 0: return; //return to main menu
                 default: System.out.println("Invalid input."); sel = -1;
             }
-            POS.pause();
         } while(sel != 0);
     }
     public void manageUser() {
@@ -99,35 +97,16 @@ public class Manager extends Employee{
             if (sel != -1) Menu.displayManagerUserMenu();
             sel = Menu.getInput();
             switch (sel) {
-                case 1:  Employee.displayAllEmp(); break; // display all user
-                case 2:  Employee.addEmployee(); break; // add user
+                case 1:  Employee.displayAllEmp(); POS.pause();break; // display all user
+                case 2:  Employee.addEmployee(); POS.pause();break; // add user
                 case 3:  Employee.modifyEmployee(); break; // modify user
-                case 4:  Employee.removeEmployee(); break; // remove user
+                case 4:  Employee.removeEmployee(); POS.pause();break; // remove user
                 case 5:  Employee.searchEmployee(); break; // search user
-                case 6:  Employee.salaryEmployee(); break;
+                case 6:  Employee.salaryEmployee(); POS.pause();break;
                 case 0: return; //return to main menu
                 default: System.out.println("Invalid input."); sel = -1;
             }
-            POS.pause();
         } while(sel != 0);
     }
 
-    public void manageMembership() {
-        int sel = 0;
-        do {
-            if (sel != -1) Menu.displayManagerMembershipMenu();
-            sel = Menu.getInput();
-            switch (sel) {
-                case 1:  Membership.displayMember(); break; // display all membership
-                case 2:  Membership.addMember(); break; // add membership
-                case 3:  Membership.modifyMember(); break; // modify membership
-                case 4:  Membership.removeMember(); break; // remove membership
-                case 5:  Membership.searchMember(); break; // search membership
-                case 6:  Membership.displayActivity(); break; // display activity of the day
-                case 0: return; //return to main menu
-                default: System.out.println("Invalid input."); sel = -1;
-            }
-            POS.pause();
-        } while(sel != 0);
-    }
 }

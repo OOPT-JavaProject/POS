@@ -38,15 +38,16 @@ public class Staff extends Employee{
     }
     
     public void dMenu() {
-        Menu.displayStaffMenu();
-        int sel;
+        int sel = 0;
         do {
+            if (sel != -1) Menu.displayStaffMenu();
             sel = Menu.getInput();
             switch (sel) {
                 case 1: Order.addOrder(); break; // Accept Orders
-                case 2: Product.displayAllProd(); break; // Display All Products
-                case 3: Order.displayReceipt(); break; // Display Receipts (transaction history)
-                case 4: POS.changeUser(); return; // Change User(LogOut)
+                case 2: Product.displayAllProd(); POS.pause();break; // Display All Products
+                case 3: Order.displayReceipt(); POS.pause();break; // Display Receipts (transaction history)
+                case 4: manageMembership(); break; //Manage Membership
+                case 5: POS.changeUser(); return; // Change User(LogOut)
                 case 0: POS.exit(); break; // Quit Program
                 default: System.out.println("Invalid input."); sel = -1;
             }
